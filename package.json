@@ -4,7 +4,8 @@
   "description": "Boilerplate for Artifice Software - Bolivia",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,11 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": ">=6",
+    "lint-staged": ">=10",
     "typescript": "^4.5.4"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }
