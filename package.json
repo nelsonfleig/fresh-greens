@@ -4,7 +4,7 @@
   "description": "Boilerplate for Artifice Software - Bolivia",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "cz",
     "prepare": "husky install"
   },
   "keywords": [],
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "^8.5.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
@@ -24,7 +25,17 @@
     "lint-staged": ">=10",
     "typescript": "^4.5.4"
   },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
   "lint-staged": {
     "*.js": "eslint --cache --fix"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
