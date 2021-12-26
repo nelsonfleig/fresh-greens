@@ -31,7 +31,7 @@
     "typescript": "^4.5.4"
   },
   "lint-staged": {
-    "packages/**/src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix"
+    "packages/**/src/**/*.{js,jsx,ts,tsx,css,scss}": "eslint --cache --fix"
   },
   "config": {
     "commitizen": {
