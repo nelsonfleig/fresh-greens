@@ -1,0 +1,9 @@
+{
+  "name": "@artifice/server",
+  "version": "1.0.0",
+  "description": "Artifice Graphql Server",
+  "main": "dist/index.js",
+  "author": "Nelson Fleig",
+  "license": "MIT",
+  "dependencies": {}
+}
