@@ -2,8 +2,26 @@
   "name": "@artifice/server",
   "version": "1.0.0",
   "description": "Artifice Graphql Server",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "author": "Nelson Fleig",
   "license": "MIT",
-  "dependencies": {}
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+  },
+  "devDependencies": {
+    "@types/config": "^0.0.40",
+    "@types/dotenv": "^8.2.0",
+    "ts-node-dev": "^1.1.8"
+  },
+  "dependencies": {
+    "apollo-server-express": "^3.5.0",
+    "config": "^3.3.6",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "graphql": "^15.3.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1",
+    "typedi": "^0.10.0"
+  }
 }

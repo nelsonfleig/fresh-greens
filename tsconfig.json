@@ -16,18 +16,14 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
     "paths": {
-      "@monorepo/*": ["packages/*/src/index.ts"]
+      "@artifice/*": ["packages/*/src/index.ts"]
     }
   },
-  "references": [
-    {
-      "path": "packages/web"
-    },
-    {
-      "path": "packages/server"
-    }
-  ],
-  "exclude": ["node_modules", "dist", "*.d.ts"]
+  "exclude": ["node_modules", "dist", "*.d.ts", ".eslintrc.js"]
 }

@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "browser": true,
     "es2021": true
@@ -9,9 +10,9 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 13,
+    "ecmaVersion": 2021,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json"]
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {}
