@@ -5,9 +5,10 @@ import {
 import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
 import express, { Express } from 'express';
+import { graphqlUploadExpress } from 'graphql-upload';
 import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typedi';
-import { HelloResolver } from './modules/hello/hello.resolver';
+import { ExampleResolver } from './modules/example/example.resolver';
 import { Context } from './types/Context';
 
 export class Application {
@@ -23,15 +24,16 @@ export class Application {
       })
     );
     app.use(express.json());
+    app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
     // Healthcheck
     app.get('/api/health-check', (_, res) => res.sendStatus(200));
 
     // Build TypeGraphQL executable schema
     const schema = await TypeGraphQL.buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [ExampleResolver],
       container: Container,
-      // validate: true,
+      validate: true,
     });
 
     const server = new ApolloServer({
