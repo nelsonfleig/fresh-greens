@@ -3,7 +3,8 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { Arg, Mutation, Query, Resolver } from 'type-graphql';
 import { Service } from 'typedi';
-import { FileUploadService } from '../file-upload/file-upload.service';
+import { AppMailerService } from '../common/app-mailer.service';
+import { AWSUploaderService } from '../core/upload/aws-uploader.service';
 
 @Service()
 class PrintService {
@@ -17,20 +18,25 @@ class PrintService {
 @Service()
 @Resolver()
 export class ExampleResolver {
-  constructor(private printService: PrintService, private fileUploadService: FileUploadService) {}
+  constructor(
+    private printService: PrintService,
+    private uploaderService: AWSUploaderService,
+    private appMailerService: AppMailerService
+  ) {}
 
   @Query(() => String)
   hello() {
     return this.printService.printMessage();
   }
 
-  @Mutation(() => Boolean)
-  async singleUpload(@Arg('file', () => GraphQLUpload) file: FileUpload): Promise<boolean> {
-    return this.fileUploadService.uploadToDisk(file);
+  @Query(() => Boolean)
+  async testEmail() {
+    await this.appMailerService.sendTestEmail();
+    return true;
   }
 
   @Mutation(() => String)
   async singleUploadS3(@Arg('file', () => GraphQLUpload) file: FileUpload): Promise<string> {
-    return this.fileUploadService.uploadToS3(file);
+    return this.uploaderService.upload(file);
   }
 }

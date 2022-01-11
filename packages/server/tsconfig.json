@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "sourceMap": true,
     "resolveJsonModule": true,
     "composite": true,

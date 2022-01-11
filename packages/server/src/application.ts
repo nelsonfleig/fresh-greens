@@ -1,3 +1,4 @@
+import config from 'config';
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageProductionDefault,
@@ -9,7 +10,7 @@ import { graphqlUploadExpress } from 'graphql-upload';
 import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typedi';
 import { ExampleResolver } from './modules/example/example.resolver';
-import { Context } from './types/Context';
+import { Context } from './ts/types/Context';
 
 export class Application {
   static async create(): Promise<Express> {
@@ -19,7 +20,7 @@ export class Application {
     // Apply express middleware
     app.use(
       cors({
-        origin: process.env.WEB_FRONTEND_URL,
+        origin: config.get('frontendUrl'),
         credentials: true,
       })
     );
@@ -45,7 +46,7 @@ export class Application {
           : ApolloServerPluginLandingPageGraphQLPlayground(),
       ],
     });
-    // await server.start()
+    // start the apollo server
     await server.start();
     // apply middleware to server
     server.applyMiddleware({ app });

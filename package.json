@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "commit": "cz",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev:server": "cd packages/server && yarn dev"
   },
   "keywords": [],
   "author": "",
