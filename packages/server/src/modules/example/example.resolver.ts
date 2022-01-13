@@ -1,10 +1,11 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable max-classes-per-file */
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Mutation, Query, Resolver, Authorized } from 'type-graphql';
 import { Service } from 'typedi';
 import { AppMailerService } from '../common/app-mailer.service';
 import { AWSUploaderService } from '../core/upload/aws-uploader.service';
+import { Roles } from '../user/types/roles.enum';
 
 @Service()
 class PrintService {
@@ -38,5 +39,11 @@ export class ExampleResolver {
   @Mutation(() => String)
   async singleUploadS3(@Arg('file', () => GraphQLUpload) file: FileUpload): Promise<string> {
     return this.uploaderService.upload(file);
+  }
+
+  @Authorized(Roles.USER)
+  @Query(() => Boolean)
+  protect(): boolean {
+    return true;
   }
 }

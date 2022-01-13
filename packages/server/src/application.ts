@@ -5,7 +5,7 @@ import {
 import { ApolloServer } from 'apollo-server-express';
 import config from 'config';
 import cors from 'cors';
-import express, { Express } from 'express';
+import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
 // import helmet from 'helmet';
 import * as TypeGraphQL from 'type-graphql';
@@ -14,9 +14,11 @@ import * as TypeORM from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { resolvers } from './modules';
-import { User } from './modules/user/user.entity';
+import { CustomAuthChecker } from './modules/core/auth-checker/auth-checker';
+import { JwtService } from './modules/core/jwt/jwt.service';
+import { Roles } from './modules/user/types/roles.enum';
 import { Context } from './ts/types/context.type';
-import { verifyJwt } from './utils/jwt.utils';
+import { UserJwt } from './ts/types/user-jwt.type';
 import logger from './utils/logger';
 
 TypeORM.useContainer(Container);
@@ -26,11 +28,12 @@ TypeORM.useContainer(Container);
  */
 @Service()
 export class Application {
-  private static app: Express;
+  constructor(
+    private readonly customAuthChecker: CustomAuthChecker,
+    private readonly jwtService: JwtService
+  ) {}
 
-  static async create(): Promise<Express> {
-    if (this.app) return this.app;
-
+  async start(): Promise<void> {
     // Connect to DB
     await this.connectDb();
 
@@ -51,10 +54,27 @@ export class Application {
     // Healthcheck
     app.get('/api/health-check', (_, res) => res.sendStatus(200));
 
+    // Apply Apollo graphql server
+    await this.applyApollo(app);
+
+    const port = config.get('port');
+    app.listen(port, () => {
+      logger.info(`🚀 Server started on port ${port}`);
+    });
+  }
+
+  private async applyApollo(app: express.Express) {
+    // Register enums
+    TypeGraphQL.registerEnumType(Roles, {
+      name: 'Roles', // this one is mandatory
+      description: 'User roles', // this one is optional
+    });
+
     // Build TypeGraphQL executable schema
     const schema = await TypeGraphQL.buildSchema({
       resolvers,
       container: Container,
+      authChecker: this.customAuthChecker.check,
       validate: true,
     });
 
@@ -63,8 +83,11 @@ export class Application {
       context: (ctx: Context) => {
         const accessToken = (ctx.req.headers.authorization || '').replace(/^Bearer\s/, '');
         if (accessToken) {
-          const user = verifyJwt<User>(accessToken, 'accessTokenPublicKey');
-          ctx.user = user;
+          const decodedUser = this.jwtService.verifyJwt<UserJwt>(
+            accessToken,
+            'accessTokenPublicKey'
+          );
+          ctx.user = decodedUser;
         }
         return ctx;
       },
@@ -78,12 +101,9 @@ export class Application {
     await server.start();
     // apply middleware to server
     server.applyMiddleware({ app });
-
-    this.app = app;
-    return app;
   }
 
-  private static async connectDb(): Promise<void> {
+  private async connectDb(): Promise<void> {
     try {
       // Get options for current environment
       const typeormOptions = config.get<PostgresConnectionOptions>('typeorm');
