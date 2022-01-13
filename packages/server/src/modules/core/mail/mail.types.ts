@@ -1,3 +1,9 @@
+export type SmtpConfig = {
+  host: string;
+  port: number;
+  from: string;
+};
+
 export type SMTPTransportOptions = {
   host: string;
   port: number;
@@ -8,9 +14,9 @@ export type SMTPTransportOptions = {
   secure: boolean;
 };
 
-export interface MailOptions {
+export type MailOptions = {
   to: string;
   subject: string;
   template: string;
   context?: Record<string, any>;
-}
+};

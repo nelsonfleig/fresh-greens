@@ -1,9 +1,9 @@
 import { Arg, ClassType, ID, Int, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
 import pluralize from 'pluralize';
 import { Middleware } from 'type-graphql/dist/interfaces/Middleware';
-import { AbstractService } from './service.abstract';
+import { AbstractService } from './abstract.service';
 
-export function createBaseResolver<T extends ClassType, I extends ClassType>(
+export function AbstractResolver<T extends ClassType, I extends ClassType>(
   objectTypeCls: T,
   inputType: I,
   relations: string[] = [],

@@ -1,0 +1,15 @@
+{
+  "name": "development",
+  "type": "postgres",
+  "host": "localhost",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["src/modules/**/*.entity.ts"],
+  "migrations": ["src/migrations/**/*.ts"],
+  "subscribers": ["src/subscribers/**/*.ts"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration",
+    "subscribersDir": "src/subscriber"
+  }
+}

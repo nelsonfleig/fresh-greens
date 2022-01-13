@@ -1,1 +1,5 @@
+# DB data
+.artifice-db
+
+# Env
 .env

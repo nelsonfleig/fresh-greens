@@ -1,15 +1,18 @@
 import config from 'config';
 import path from 'path';
-import { SMTPTransportOptions } from './mail.types';
+import { SmtpConfig, SMTPTransportOptions } from './mail.types';
+
+const smtp = config.get<SmtpConfig>('smtp');
 
 const transportOptions: SMTPTransportOptions = {
-  host: config.get('smtpHost'),
-  port: config.get('smtpPort'),
+  host: smtp.host,
+  port: smtp.port,
+  // Auth credentials are provided through env variables
   auth: {
     user: config.get('smtpUser'),
     pass: config.get('smtpPassword'),
   },
-  secure: config.get('smtpPort') === 465,
+  secure: smtp.port === 465,
 };
 
 const viewEngineOptions = {
@@ -43,6 +46,6 @@ export const mailerOptions = {
   transport: transportOptions,
   viewEngine: viewEngineOptions,
   defaults: {
-    from: config.get<string>('smtpFrom'),
+    from: smtp.from,
   },
 };

@@ -2,7 +2,6 @@
   "name": "artifice",
   "version": "1.0.0",
   "description": "Monorepo Boilerplate for Artifice Software - Bolivia",
-  "main": "dist/src/index.js",
   "private": true,
   "workspaces": [
     "packages/*"
