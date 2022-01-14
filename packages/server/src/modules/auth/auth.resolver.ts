@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import { Context } from '../../ts/types/context.type';
 import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
@@ -11,8 +11,8 @@ export class AuthResolver {
   constructor(protected authService: AuthService, protected userService: UserService) {}
 
   @Mutation(() => AuthResponse, { description: 'Login user' })
-  login(@Arg('input') input: LoginInput) {
-    return this.authService.login(input);
+  login(@Arg('input') input: LoginInput, @Ctx() { res }: Context) {
+    return this.authService.login(input, res);
   }
 
   @Mutation(() => User, { description: 'Register user' })
@@ -23,5 +23,11 @@ export class AuthResolver {
   @Query(() => User, { description: 'Get logged in user', nullable: true })
   me(@Ctx() { user }: Context) {
     return this.userService.findOne({ id: user?.id });
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean, { description: 'Logout user' })
+  logout(@Ctx() { res }: Context) {
+    return this.authService.logout(res);
   }
 }

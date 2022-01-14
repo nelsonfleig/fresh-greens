@@ -13,6 +13,7 @@ import { Service } from 'typedi';
 import * as TypeORM from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import cookieParser from 'cookie-parser';
 import { resolvers } from './modules';
 import { CustomAuthChecker } from './modules/core/auth-checker/auth-checker';
 import { JwtService } from './modules/core/jwt/jwt.service';
@@ -49,6 +50,7 @@ export class Application {
     );
     // app.use(helmet());
     app.use(express.json());
+    app.use(cookieParser());
     app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
     // Healthcheck
@@ -66,8 +68,8 @@ export class Application {
   private async applyApollo(app: express.Express) {
     // Register enums
     TypeGraphQL.registerEnumType(Roles, {
-      name: 'Roles', // this one is mandatory
-      description: 'User roles', // this one is optional
+      name: 'Roles',
+      description: 'User roles',
     });
 
     // Build TypeGraphQL executable schema
@@ -81,7 +83,7 @@ export class Application {
     const server = new ApolloServer({
       schema,
       context: (ctx: Context) => {
-        const accessToken = (ctx.req.headers.authorization || '').replace(/^Bearer\s/, '');
+        const accessToken = ctx.req.cookies?.accessToken;
         if (accessToken) {
           const decodedUser = this.jwtService.verifyJwt<UserJwt>(
             accessToken,
@@ -100,7 +102,13 @@ export class Application {
     // start the apollo server
     await server.start();
     // apply middleware to server
-    server.applyMiddleware({ app });
+    server.applyMiddleware({
+      app,
+      cors: {
+        origin: config.get('frontendUrl'),
+        credentials: true
+      },
+    });
   }
 
   private async connectDb(): Promise<void> {
