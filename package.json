@@ -1,7 +1,7 @@
 {
   "name": "artifice",
   "version": "1.0.0",
-  "description": "Monorepo Boilerplate for Artifice Software - Bolivia",
+  "description": "Monorepo for FreshGreens app - Created as part of Codeworks Senior curriculum",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -10,9 +10,20 @@
     "commit": "cz",
     "prepare": "husky install",
     "dev:server": "cd packages/server && yarn dev",
-    "dev:web": "cd packages/web && yarn dev"
+    "dev:web": "cd packages/web && yarn dev",
+    "infra:up": "docker-compose up -d",
+    "infra:down": "docker-compose down"
   },
-  "keywords": [],
+  "keywords": [
+    "typescript",
+    "graphql",
+    "typegraphql",
+    "react",
+    "nextjs",
+    "postgres",
+    "typeorm",
+    "apollo"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
