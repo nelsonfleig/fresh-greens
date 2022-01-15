@@ -1,34 +1,24 @@
-import { getDataFromTree } from '@apollo/client/react/ssr';
+import { ApolloProvider } from '@apollo/client';
 import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from 'styled-components';
-import { FullPageLoader, Layout } from '../components';
-import { Forbidden } from '../components/common/forbidden';
-import { Role } from '../graphql/__generated__';
-import { useUser } from '../hooks/useUser';
-import { hasPermission } from '../lib/checkRoles';
-import withApollo from '../lib/withApollo';
+import { Layout } from '../components';
+import { useApollo } from '../lib/apolloClient';
 import '../styles/globals.css';
 import { theme } from '../theme';
 
 function MyApp({ Component, pageProps = {} }: AppProps) {
-  const { user, loading, error } = useUser();
-
-  console.log(user, error);
+  const apolloClient = useApollo(pageProps);
 
   return (
     <ThemeProvider theme={theme}>
-      <Layout>
-        {loading ? (
-          <FullPageLoader />
-        ) : !hasPermission(pageProps, user) ? (
-          <Forbidden />
-        ) : (
+      <ApolloProvider client={apolloClient}>
+        <Layout pageProps={pageProps}>
           <Component {...pageProps} />
-        )}
-      </Layout>
+        </Layout>
+      </ApolloProvider>
     </ThemeProvider>
   );
 }
 
-export default withApollo(MyApp, { getDataFromTree });
+export default MyApp;

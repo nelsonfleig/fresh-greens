@@ -1,9 +1,10 @@
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
+import withApollo from '../lib/withApollo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { FormikInput } from '../components';
+import { FormikInput, Layout } from '../components';
 import { FormLinks, FormPageWrapper, FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
 import { useLoginMutation } from '../graphql/__generated__';

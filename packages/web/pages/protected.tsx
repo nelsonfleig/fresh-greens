@@ -1,29 +1,26 @@
 import { GetStaticProps, NextPage } from 'next';
 import { Layout } from '../components';
+import { Role } from '../graphql/__generated__';
 import { useUser } from '../hooks/useUser';
 import withApollo from '../lib/withApollo';
+import { PageProps } from '../types';
 
 const Protected: NextPage = () => {
   const { user } = useUser();
 
   return (
-    <Layout>
+    <div>
       <h1>PROTECTED PAGE</h1>
       <p>{JSON.stringify(user)}</p>
-    </Layout>
+    </div>
   );
 };
 
-interface StaticProps {
-  protected?: boolean;
-  userTypes?: string[];
-}
-
-export const getStaticProps: GetStaticProps<StaticProps, {}> = async context => {
+export const getStaticProps: GetStaticProps<PageProps, {}> = async context => {
   return {
     props: {
       protected: true,
-      userTypes: ['USER'],
+      roles: [Role.User],
     },
   };
 };

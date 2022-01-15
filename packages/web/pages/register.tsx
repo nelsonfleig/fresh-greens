@@ -3,13 +3,14 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { FormikInput } from '../components';
+import { FormikInput, Layout } from '../components';
 import { FormLinks, FormPageWrapper, FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
 import { useRegisterMutation } from '../graphql/__generated__';
+import withApollo from '../lib/withApollo';
 import { registerSchema } from '../models/register.form';
 
-const Login: NextPage = () => {
+const Register: NextPage = () => {
   const router = useRouter();
   const [register] = useRegisterMutation();
 
@@ -71,4 +72,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default Login;
+export default Register;

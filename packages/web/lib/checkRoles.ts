@@ -1,10 +1,13 @@
 import { Role, User } from '../graphql/__generated__';
+import { PageProps } from '../types';
 
 type RolesType = {
   roles: Role[];
 };
-type PageProps = RolesType & { protected?: boolean };
 
-export const hasPermission = (pageProps: PageProps, user: RolesType | null | undefined) =>
-  (!pageProps.protected && !user) ||
-  (user && pageProps.roles && pageProps.roles.some((role: Role) => user.roles.includes(role)));
+export const hasPermission = (pageProps: PageProps, user?: RolesType | null) => {
+  return (
+    !pageProps.protected ||
+    (user && pageProps.roles && pageProps.roles.some((role: Role) => user.roles.includes(role)))
+  );
+};

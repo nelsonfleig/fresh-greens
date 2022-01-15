@@ -1,16 +1,24 @@
 import React from 'react';
-import { Navbar } from '..';
+import { Forbidden, FullPageLoader, Navbar } from '..';
 import { GlobalStyle } from '../../theme';
 import { LayoutWrapper, Main } from './styles';
 import Head from 'next/head';
 import { ToastContainer } from 'react-toastify';
+import { useUser } from '../../hooks/useUser';
+import { hasPermission } from '../../lib/checkRoles';
+import { PageProps } from '../../types';
 
 interface Props {
   children: React.ReactNode;
+  pageProps: PageProps;
 }
 
-export const Layout = ({ children }: Props) => {
-  return (
+export const Layout = ({ children, pageProps }: Props) => {
+  const { user, loading, error } = useUser();
+
+  return loading ? (
+    <FullPageLoader />
+  ) : (
     <LayoutWrapper>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,7 +31,7 @@ export const Layout = ({ children }: Props) => {
       <GlobalStyle />
       <ToastContainer />
       <Navbar />
-      <Main>{children}</Main>
+      <Main>{hasPermission(pageProps, user) ? children : <Forbidden />}</Main>
     </LayoutWrapper>
   );
 };
