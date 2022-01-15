@@ -48,4 +48,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default withApollo(Login);
+export default Login;

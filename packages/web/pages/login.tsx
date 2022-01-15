@@ -1,6 +1,7 @@
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { FormikInput, Layout } from '../components';
 import { FormLinks, FormPageWrapper, FormTitle, FormWrapper } from '../components/forms/styles';
@@ -13,6 +14,7 @@ const Login: NextPage = () => {
   const [login] = useLoginMutation({
     refetchQueries: ['Me'],
   });
+  const router = useRouter();
 
   return (
     <Layout>
@@ -32,6 +34,7 @@ const Login: NextPage = () => {
                     input: values,
                   },
                 });
+                router.push('/protected');
               } catch (error) {
                 if (error instanceof Error) {
                   toast.error(error.message);
@@ -68,4 +71,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default withApollo(Login);
+export default Login;

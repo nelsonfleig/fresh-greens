@@ -3,6 +3,7 @@ import { Navbar } from '..';
 import { GlobalStyle } from '../../theme';
 import { LayoutWrapper, Main } from './styles';
 import Head from 'next/head';
+import { ToastContainer } from 'react-toastify';
 
 interface Props {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export const Layout = ({ children }: Props) => {
         />
       </Head>
       <GlobalStyle />
+      <ToastContainer />
       <Navbar />
       <Main>{children}</Main>
     </LayoutWrapper>
