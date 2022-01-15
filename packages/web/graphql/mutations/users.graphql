@@ -4,10 +4,11 @@ mutation Login($input: LoginInput!) {
   }
 }
 
-mutation Register($input: LoginInput!) {
+mutation Register($input: RegisterInput!) {
   register(input: $input) {
     id
     email
+    roles
   }
 }
 

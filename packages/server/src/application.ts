@@ -17,7 +17,7 @@ import cookieParser from 'cookie-parser';
 import { resolvers } from './modules';
 import { CustomAuthChecker } from './modules/core/auth-checker/auth-checker';
 import { JwtService } from './modules/core/jwt/jwt.service';
-import { Roles } from './modules/user/types/roles.enum';
+import { Role } from './modules/user/types/role.enum';
 import { Context } from './ts/types/context.type';
 import { UserJwt } from './ts/types/user-jwt.type';
 import logger from './utils/logger';
@@ -67,9 +67,9 @@ export class Application {
 
   private async applyApollo(app: express.Express) {
     // Register enums
-    TypeGraphQL.registerEnumType(Roles, {
-      name: 'Roles',
-      description: 'User roles',
+    TypeGraphQL.registerEnumType(Role, {
+      name: 'Role',
+      description: 'User role',
     });
 
     // Build TypeGraphQL executable schema
@@ -106,7 +106,7 @@ export class Application {
       app,
       cors: {
         origin: config.get('frontendUrl'),
-        credentials: true
+        credentials: true,
       },
     });
   }

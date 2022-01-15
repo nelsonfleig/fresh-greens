@@ -5,7 +5,7 @@ const typeormConfig = {
   port: 5432,
   username: 'postgres',
   password: 'postgres',
-  database: 'artifice-db',
+  database: 'fresh-greens',
   synchronize: true,
   logging: true,
   entities: ['src/modules/**/*.entity.ts'],

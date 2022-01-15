@@ -1,11 +1,10 @@
-import type { GetStaticProps, NextPage } from 'next';
-import { Layout } from '../components';
+import type { NextPage } from 'next';
 import { useUser } from '../hooks/useUser';
 
 const Home: NextPage = () => {
   const { user } = useUser();
 
-  return <Layout>{JSON.stringify(user)}</Layout>;
+  return <h1>{JSON.stringify(user)}</h1>;
 };
 
 export default Home;

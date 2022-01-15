@@ -4,6 +4,9 @@ node_modules
 # Env
 .env
 
+# Postgres data
+.dbdata
+
 # Misc
 .eslintcache
 yarn-error.log

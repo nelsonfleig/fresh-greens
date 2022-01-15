@@ -5,6 +5,7 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { AuthResponse } from './types/auth.response';
 import { LoginInput } from './types/login.input';
+import { RegisterInput } from './types/register.input';
 
 @Resolver()
 export class AuthResolver {
@@ -16,7 +17,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => User, { description: 'Register user' })
-  register(@Arg('input') input: LoginInput) {
+  register(@Arg('input') input: RegisterInput) {
     return this.authService.register(input);
   }
 

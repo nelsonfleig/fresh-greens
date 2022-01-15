@@ -5,7 +5,7 @@ import { Arg, Mutation, Query, Resolver, Authorized } from 'type-graphql';
 import { Service } from 'typedi';
 import { AppMailerService } from '../common/app-mailer.service';
 import { AWSUploaderService } from '../core/upload/aws-uploader.service';
-import { Roles } from '../user/types/roles.enum';
+import { Role } from '../user/types/role.enum';
 
 @Service()
 class PrintService {
@@ -41,7 +41,7 @@ export class ExampleResolver {
     return this.uploaderService.upload(file);
   }
 
-  @Authorized(Roles.USER)
+  @Authorized(Role.USER)
   @Query(() => Boolean)
   protect(): boolean {
     return true;

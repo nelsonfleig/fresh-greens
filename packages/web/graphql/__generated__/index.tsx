@@ -58,7 +58,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationRegisterArgs = {
-  input: LoginInput;
+  input: RegisterInput;
 };
 
 
@@ -98,8 +98,15 @@ export type QueryPaginateUsersArgs = {
   skip?: InputMaybe<Scalars['Int']>;
 };
 
-/** User roles */
-export enum Roles {
+export type RegisterInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+/** User role */
+export enum Role {
   Admin = 'ADMIN',
   Seller = 'SELLER',
   User = 'USER'
@@ -109,8 +116,11 @@ export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
+  firstName: Scalars['String'];
   id: Scalars['ID'];
-  roles: Array<Roles>;
+  lastName: Scalars['String'];
+  roles: Array<Role>;
+  sellerName?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
 };
 
@@ -127,11 +137,11 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', accessToken: string } };
 
 export type RegisterMutationVariables = Exact<{
-  input: LoginInput;
+  input: RegisterInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, email: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', id: string, email: string, roles: Array<Role> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -141,7 +151,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Roles> } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Role> } | null | undefined };
 
 export type FindUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -183,10 +193,11 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($input: LoginInput!) {
+    mutation Register($input: RegisterInput!) {
   register(input: $input) {
     id
     email
+    roles
   }
 }
     `;

@@ -5,8 +5,8 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=artifice-db
+      - POSTGRES_DB=fresh-greens
     ports:
       - 5432:5432
     volumes:
-      - .artifice-db:/var/lib/postgresql/data
+      - .dbdata:/var/lib/postgresql/data
