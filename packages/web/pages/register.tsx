@@ -3,11 +3,10 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { FormikInput, Layout } from '../components';
-import { FormLinks, FormPageWrapper, FormTitle, FormWrapper } from '../components/forms/styles';
+import { CenterInPage, FormikInput } from '../components';
+import { FormLinks, FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
 import { useRegisterMutation } from '../graphql/__generated__';
-import withApollo from '../lib/withApollo';
 import { registerSchema } from '../models/register.form';
 
 const Register: NextPage = () => {
@@ -15,7 +14,7 @@ const Register: NextPage = () => {
   const [register] = useRegisterMutation();
 
   return (
-    <FormPageWrapper>
+    <CenterInPage>
       <FormWrapper>
         <FormTitle>Create an account</FormTitle>
         <Formik
@@ -68,7 +67,7 @@ const Register: NextPage = () => {
           </Link>
         </FormLinks>
       </FormWrapper>
-    </FormPageWrapper>
+    </CenterInPage>
   );
 };
 

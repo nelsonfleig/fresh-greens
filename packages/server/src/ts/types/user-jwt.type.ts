@@ -1,4 +1,6 @@
+import { Role } from 'src/modules/user/types/role.enum';
+
 export type UserJwt = {
-  id: string,
-  roles: string[]
-}
+  id: number;
+  roles: Role[];
+};

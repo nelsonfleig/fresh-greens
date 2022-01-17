@@ -18,4 +18,8 @@ export const StyledButton = styled.button<{ fullWidth?: boolean }>`
     background: ${props => props.theme.colors.redHover};
     cursor: pointer;
   }
+  &:disabled {
+    cursor: not-allowed;
+    background: ${props => props.theme.colors.redForbidden};
+  }
 `;

@@ -1,0 +1,5 @@
+query FindProductsBySellerId($sellerId: ID!) {
+  findProductsBySellerId(sellerId: $sellerId) {
+    ...productFragment
+  }
+}

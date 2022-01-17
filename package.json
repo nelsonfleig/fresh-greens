@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "dev:server": "cd packages/server && yarn dev",
     "dev:web": "cd packages/web && yarn dev",
-    "infra:up": "docker-compose up -d && echo \"*** Docker services running in background ***\" ",
+    "infra:up": "docker-compose up -d && echo \"*** Docker containers running in the background ***\" ",
     "infra:down": "docker-compose down"
   },
   "keywords": [

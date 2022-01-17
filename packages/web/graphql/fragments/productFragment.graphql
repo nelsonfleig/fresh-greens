@@ -1,0 +1,13 @@
+fragment productFragment on Product {
+  id
+  name
+  description
+  price
+  imageUrl
+  user {
+    id
+    sellerName
+    sellerNameSlug
+    sellerImageUrl
+  }
+}

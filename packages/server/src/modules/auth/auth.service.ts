@@ -57,4 +57,23 @@ export class AuthService {
     res.clearCookie('accessToken');
     return true;
   }
+
+  reissueAccessToken(user: User, res: Response) {
+    const accessToken = this.jwtService.signJwt(
+      {
+        id: user.id,
+        roles: user.roles,
+      },
+      'accessTokenPrivateKey',
+      {
+        expiresIn: '30d',
+      }
+    );
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      domain: 'localhost',
+      sameSite: 'strict',
+      secure: config.get<string>('nodeEnv') === 'production',
+    });
+  }
 }

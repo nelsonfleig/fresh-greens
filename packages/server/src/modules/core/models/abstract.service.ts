@@ -9,8 +9,8 @@ type PaginateInput = {
 export abstract class AbstractService {
   constructor(protected readonly repository: Repository<any>) {}
 
-  find(relations: string[] = []): Promise<any[]> {
-    return this.repository.find({ relations });
+  find(condition: any = {}, relations: string[] = []): Promise<any[]> {
+    return this.repository.find({ where: condition, relations });
   }
 
   paginate(paginateInput: PaginateInput, relations: string[] = []): Promise<any[]> {
@@ -29,11 +29,14 @@ export abstract class AbstractService {
 
   async update(id: number, data: any): Promise<any> {
     const found = await this.repository.findOne(id);
-    const updated = {
-      ...found,
-      ...data,
-    };
-    return this.repository.save(updated);
+
+    // Original Typeorm entity props must be updated directly for
+    // BeforeUpdate hooks to run. Using spread operator does not work updates
+    // entity, but does not run hooks
+    Object.entries(data).forEach(([key, value]) => {
+      found[key] = value;
+    });
+    return this.repository.save(found);
   }
 
   async delete(id: number): Promise<boolean> {

@@ -1,0 +1,11 @@
+mutation AddProduct($input: ProductInput!, $productImage: Upload!) {
+  createProduct(input: $input, productImage: $productImage) {
+    id
+    name
+    slug
+    imageUrl
+    user {
+      id
+    }
+  }
+}

@@ -1,23 +1,22 @@
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
-import withApollo from '../lib/withApollo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
-import { FormikInput, Layout } from '../components';
-import { FormLinks, FormPageWrapper, FormTitle, FormWrapper } from '../components/forms/styles';
+import { CenterInPage, FormikInput } from '../components';
+import { FormLinks, FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
-import { useLoginMutation } from '../graphql/__generated__';
+import { MeDocument, useLoginMutation } from '../graphql/__generated__';
 import { loginSchema } from '../models/login.form';
 
 const Login: NextPage = () => {
   const [login] = useLoginMutation({
-    refetchQueries: ['Me'],
+    refetchQueries: [MeDocument],
   });
   const router = useRouter();
 
   return (
-    <FormPageWrapper>
+    <CenterInPage>
       <FormWrapper>
         <FormTitle>Login</FormTitle>
         <Formik
@@ -66,7 +65,7 @@ const Login: NextPage = () => {
           </Link>
         </FormLinks>
       </FormWrapper>
-    </FormPageWrapper>
+    </CenterInPage>
   );
 };
 

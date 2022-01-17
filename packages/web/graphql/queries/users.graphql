@@ -9,6 +9,9 @@ query Me {
     id
     email
     roles
+    isSeller
+    firstName
+    lastName
   }
 }
 

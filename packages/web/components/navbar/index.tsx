@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { toast } from 'react-toastify';
 import { useLogoutMutation } from '../../graphql/__generated__';
 import { useUser } from '../../hooks/useUser';
 import { NavContent, NavHeader, NavLink, NavLinks, NavLogin, NavLogo, NavLogout } from './styles';
@@ -11,8 +13,20 @@ export const Navbar = (props: Props) => {
   const [logout] = useLogoutMutation({
     refetchQueries: ['Me'],
   });
+  const router = useRouter();
 
   const { user } = useUser();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   return (
     <NavHeader>
@@ -24,11 +38,20 @@ export const Navbar = (props: Props) => {
           </NavLogo>
         </Link>
         <NavLinks>
-          <NavLink>
-            <Link href="/login">
-              <a>Become a Seller</a>
-            </Link>
-          </NavLink>
+          {user && !user?.isSeller && (
+            <NavLink>
+              <Link href="/register-seller">
+                <a>Become a Seller</a>
+              </Link>
+            </NavLink>
+          )}
+          {user?.isSeller && (
+            <NavLink>
+              <Link href="/seller">
+                <a>Dashboard</a>
+              </Link>
+            </NavLink>
+          )}
           {!user ? (
             <NavLink>
               <Link href="/login">
@@ -37,7 +60,7 @@ export const Navbar = (props: Props) => {
             </NavLink>
           ) : (
             <NavLink>
-              <NavLogout onClick={async () => await logout()}>Logout</NavLogout>
+              <NavLogout onClick={handleLogout}>Logout</NavLogout>
             </NavLink>
           )}
         </NavLinks>

@@ -13,6 +13,7 @@ declare module 'styled-components' {
       darkGray: string;
       redHover: string;
       offWhite: string;
+      redForbidden: string;
     };
     layout: {
       maxWidth: string;

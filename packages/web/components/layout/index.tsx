@@ -5,7 +5,7 @@ import { LayoutWrapper, Main } from './styles';
 import Head from 'next/head';
 import { ToastContainer } from 'react-toastify';
 import { useUser } from '../../hooks/useUser';
-import { hasPermission } from '../../lib/checkRoles';
+import { hasPermission } from '../../lib/hasPermission';
 import { PageProps } from '../../types';
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const Layout = ({ children, pageProps }: Props) => {
-  const { user, loading, error } = useUser();
+  const { user, loading } = useUser();
 
   return loading ? (
     <FullPageLoader />

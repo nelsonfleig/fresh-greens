@@ -12,6 +12,7 @@ export const theme: DefaultTheme = {
     offWhite: '#f9f9f9',
     // Hover
     redHover: '#E76F51',
+    redForbidden: '#B5573F',
   },
   layout: {
     maxWidth: '1200px',
@@ -49,6 +50,9 @@ export const GlobalStyle = createGlobalStyle`
     font-size: 15px;
   }
 
+  button {
+    font-size: 15px;
+  }
 
   li {
     list-style-type: none;

@@ -1,6 +1,7 @@
-import { FieldHookConfig, FieldInputProps, useField } from 'formik';
+import { FieldHookConfig, useField } from 'formik';
 import React from 'react';
-import { FormGroup, FormikFieldError, FormInputField, Label } from './styles';
+import { FormGroup, FormikFieldError, FormLabel } from '../styles';
+import { FormInputField } from './styles';
 
 interface FormikInputProps {
   label?: string;
@@ -14,7 +15,7 @@ export const FormikInput = ({ label, ...props }: FormikInputProps & FieldHookCon
 
   return (
     <FormGroup fullWidth>
-      <Label>{label}</Label>
+      <FormLabel>{label}</FormLabel>
       <FormInputField
         {...field}
         {...props}

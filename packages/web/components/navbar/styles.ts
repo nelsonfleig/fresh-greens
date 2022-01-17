@@ -26,7 +26,7 @@ export const NavLogo = styled.a`
   cursor: pointer;
   h1 {
     margin-left: 5px;
-    font-weight: 500;
+    font-weight: 600;
     color: ${props => props.theme.colors.darkGreen};
     font-family: 'Itim', sans-serif;
   }

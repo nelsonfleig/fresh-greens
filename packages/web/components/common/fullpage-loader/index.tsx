@@ -5,7 +5,7 @@ import { Layout } from '../..';
 import { flex } from '../../../theme';
 
 const LoaderWrapper = styled.div`
-  height: 100%;
+  height: 100vh;
   width: 100%;
   ${flex('row', 'center', 'center')}
 `;

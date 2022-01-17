@@ -1,15 +1,21 @@
 import styled from 'styled-components';
+import { flex } from '../../theme';
 
 // Export other components in subfolders
 export * from './fullpage-loader';
 export * from './forbidden';
 
 // General Purpose Styled Components
+export const CenterInPage = styled.div`
+  height: 100%;
+  ${flex('column', 'center', 'center')}
+`;
 
 type LoaderProps = {
   size?: 'lg' | 'sm';
   rgb?: string;
 };
+
 export const Loader = styled.div<LoaderProps>`
   border-radius: 50%;
   /* width: 24px; */

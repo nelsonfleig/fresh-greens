@@ -4,16 +4,17 @@ import {
 } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import config from 'config';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import { graphqlUploadExpress } from 'graphql-upload';
 // import helmet from 'helmet';
 import * as TypeGraphQL from 'type-graphql';
+import { ApolloServerLoaderPlugin } from 'type-graphql-dataloader';
 import { Service } from 'typedi';
 import * as TypeORM from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import cookieParser from 'cookie-parser';
 import { resolvers } from './modules';
 import { CustomAuthChecker } from './modules/core/auth-checker/auth-checker';
 import { JwtService } from './modules/core/jwt/jwt.service';
@@ -97,6 +98,9 @@ export class Application {
         process.env.NODE_ENV === 'production'
           ? ApolloServerPluginLandingPageProductionDefault()
           : ApolloServerPluginLandingPageGraphQLPlayground(),
+        ApolloServerLoaderPlugin({
+          typeormGetConnection: TypeORM.getConnection, // for use with TypeORM
+        }),
       ],
     });
     // start the apollo server

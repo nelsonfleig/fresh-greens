@@ -6,7 +6,7 @@
   "author": "Nelson Fleig",
   "license": "MIT",
   "scripts": {
-    "dev": "docker-compose up -d && ts-node-dev --respawn --transpile-only --files  src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --files  src/index.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./ormconfig.json"
   },
   "devDependencies": {
@@ -19,6 +19,7 @@
     "@types/nodemailer": "^6.4.4",
     "@types/nodemailer-express-handlebars": "^4.0.2",
     "@types/pluralize": "^0.0.29",
+    "slugify": "^1.6.5",
     "ts-node-dev": "^1.1.8",
     "typescript-transform-paths": "^3.3.1"
   },
@@ -45,7 +46,9 @@
     "pino-pretty": "^7.3.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
+    "slugify": "^1.6.5",
     "type-graphql": "^1.1.1",
+    "type-graphql-dataloader": "^0.5.0",
     "typedi": "^0.10.0",
     "typeorm": "^0.2.41",
     "typeorm-typedi-extensions": "^0.4.1"
