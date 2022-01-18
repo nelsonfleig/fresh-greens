@@ -13,6 +13,8 @@ import {
 } from './styles';
 import { FaTimesCircle } from 'react-icons/fa';
 
+
+// hello
 type CartProps = {
   hide?: boolean;
 };
