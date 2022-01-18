@@ -31,7 +31,7 @@ const ProductList = ({ shop, hideActions = false }: Props) => {
       <ProductListHeader>
         <ProductListTitle>Products</ProductListTitle>
         <RestrictAccess roles={[Role.Seller]} ownerId={shop?.user.id}>
-          <Link href={`/shops/magic-beans/add-product`}>
+          <Link href={`/shops/${shop.slug}/add-product`}>
             <ButtonLink>+ Add Product</ButtonLink>
           </Link>
         </RestrictAccess>

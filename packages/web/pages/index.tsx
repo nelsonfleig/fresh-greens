@@ -1,14 +1,16 @@
 import type { NextPage } from 'next';
-import { Container, FeaturedList, Hero } from '../components';
+import { Container, ShopsList, Hero } from '../components';
+import { useFindShopsQuery } from '../graphql/__generated__';
 import { useUser } from '../hooks/useUser';
 
 const Home: NextPage = () => {
   const { user } = useUser();
+  const { data } = useFindShopsQuery();
 
   return (
     <Container>
       <Hero />
-      <FeaturedList />
+      <ShopsList title="Featured Sellers" shops={data?.shops} />
     </Container>
   );
 };

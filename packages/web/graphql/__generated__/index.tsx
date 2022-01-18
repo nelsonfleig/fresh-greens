@@ -312,6 +312,11 @@ export type FindMyShopsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FindMyShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> };
 
+export type FindShopsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -632,6 +637,40 @@ export function useFindMyShopsLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type FindMyShopsQueryHookResult = ReturnType<typeof useFindMyShopsQuery>;
 export type FindMyShopsLazyQueryHookResult = ReturnType<typeof useFindMyShopsLazyQuery>;
 export type FindMyShopsQueryResult = Apollo.QueryResult<FindMyShopsQuery, FindMyShopsQueryVariables>;
+export const FindShopsDocument = gql`
+    query FindShops {
+  shops: findShops {
+    ...shopFragment
+  }
+}
+    ${ShopFragmentFragmentDoc}`;
+
+/**
+ * __useFindShopsQuery__
+ *
+ * To run a query within a React component, call `useFindShopsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindShopsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindShopsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindShopsQuery(baseOptions?: Apollo.QueryHookOptions<FindShopsQuery, FindShopsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindShopsQuery, FindShopsQueryVariables>(FindShopsDocument, options);
+      }
+export function useFindShopsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindShopsQuery, FindShopsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindShopsQuery, FindShopsQueryVariables>(FindShopsDocument, options);
+        }
+export type FindShopsQueryHookResult = ReturnType<typeof useFindShopsQuery>;
+export type FindShopsLazyQueryHookResult = ReturnType<typeof useFindShopsLazyQuery>;
+export type FindShopsQueryResult = Apollo.QueryResult<FindShopsQuery, FindShopsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

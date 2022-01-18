@@ -20,6 +20,7 @@ export const Navbar = (props: Props) => {
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success("You're logged out!", { position: 'top-center' });
       router.push('/');
     } catch (error) {
       if (error instanceof Error) {
@@ -40,7 +41,7 @@ export const Navbar = (props: Props) => {
         <NavLinks>
           {user && !user?.isSeller && (
             <NavLink>
-              <Link href="/register-seller">
+              <Link href="/create-shop">
                 <a>Become a Seller</a>
               </Link>
             </NavLink>

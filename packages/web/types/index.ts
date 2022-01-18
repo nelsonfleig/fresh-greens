@@ -12,6 +12,7 @@ export type CartItem = {
 
 export interface ICartState {
   cartItems: CartItem[];
+  shipping: number;
   addToCart: (product: ProductFragmentFragment) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;

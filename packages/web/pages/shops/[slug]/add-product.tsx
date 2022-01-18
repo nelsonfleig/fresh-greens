@@ -7,16 +7,22 @@ import { CenterInPage, FormikInput } from '../../../components';
 import { FormikDropzone } from '../../../components/forms/formik-dropzone';
 import { FormTitle, FormWrapper } from '../../../components/forms/styles';
 import { SubmitButton } from '../../../components/forms/submit-button';
-import { useCreateProductMutation, useFindShopBySlugQuery } from '../../../graphql/__generated__';
+import {
+  FindShopBySlugDocument,
+  useCreateProductMutation,
+  useFindShopBySlugQuery,
+} from '../../../graphql/__generated__';
 import { addProductSchema } from '../../../models/add-product.form';
 
 const AddProduct: NextPage = () => {
   const router = useRouter();
   const slug = router.query.slug as string;
-  const { data, loading } = useFindShopBySlugQuery({
+  const { data } = useFindShopBySlugQuery({
     variables: { slug },
   });
-  const [createProduct] = useCreateProductMutation();
+  const [createProduct] = useCreateProductMutation({
+    refetchQueries: [FindShopBySlugDocument],
+  });
 
   return (
     <CenterInPage>

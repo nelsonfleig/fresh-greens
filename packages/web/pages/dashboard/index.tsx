@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next';
-import Link from 'next/link';
 import React from 'react';
-import { CenteredLoader } from '../../components';
+import { ButtonLink, CenteredLoader, ShopsList } from '../../components';
+import DashboardLayout from '../../components/dashboard-layout';
 import { Role, useFindMyShopsQuery } from '../../graphql/__generated__';
 import { PageProps } from '../../types';
 
@@ -13,11 +13,13 @@ const Dashboard = (props: Props) => {
   if (loading) return <CenteredLoader />;
 
   return (
-    <div>
-      {data?.shops.map(shop => (
-        <Link href={`/shops/${shop.slug}`}>{shop.name}</Link>
-      ))}
-    </div>
+    <DashboardLayout>
+      <ShopsList
+        title="Your shops"
+        shops={data?.shops}
+        action={<ButtonLink href="/create-shop">+ Create new</ButtonLink>}
+      />
+    </DashboardLayout>
   );
 };
 

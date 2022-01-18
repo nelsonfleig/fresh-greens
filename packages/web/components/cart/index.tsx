@@ -8,11 +8,11 @@ import {
   CartItem,
   CartItems,
   CartRemove,
+  CartShippingInfo,
   CartTitle,
   CartWrapper,
 } from './styles';
 import { FaTimesCircle } from 'react-icons/fa';
-
 
 // hello
 type CartProps = {
@@ -20,7 +20,7 @@ type CartProps = {
 };
 
 export const Cart = ({ hide = false }: CartProps) => {
-  const { cartItems, removeFromCart } = useCart();
+  const { cartItems, shipping, removeFromCart } = useCart();
 
   return !hide ? (
     <CartColumn>
@@ -30,21 +30,29 @@ export const Cart = ({ hide = false }: CartProps) => {
           {cartItems.length === 0 ? (
             <CartEmptyMsg>Your cart is empty</CartEmptyMsg>
           ) : (
-            cartItems.map(({ product, qty }) => (
-              <CartItem key={product.id}>
-                <span>{qty}x</span>
-                <h4>{product.name}</h4>
-                <p>
-                  {product.price} €/{product.unit}
-                </p>
-                <CartRemove onClick={() => removeFromCart(product.id)}>
-                  <FaTimesCircle />
-                </CartRemove>
-              </CartItem>
-            ))
+            <>
+              {cartItems.map(({ product, qty }) => (
+                <CartItem key={product.id}>
+                  <span>{qty}x</span>
+                  <h4>{product.name}</h4>
+                  <p>
+                    {product.price} €/{product.unit}
+                  </p>
+                  <CartRemove onClick={() => removeFromCart(product.id)}>
+                    <FaTimesCircle />
+                  </CartRemove>
+                </CartItem>
+              ))}
+              <CartShippingInfo>
+                <span>Shipping</span>
+                <span>+ {shipping} €</span>
+              </CartShippingInfo>
+            </>
           )}
         </CartItems>
-        <ButtonLink>Checkout - {calculateCartTotal(cartItems)} €</ButtonLink>
+        <ButtonLink href="/checkout">
+          Checkout - {calculateCartTotal(cartItems, shipping)} €
+        </ButtonLink>
       </CartWrapper>
     </CartColumn>
   ) : null;

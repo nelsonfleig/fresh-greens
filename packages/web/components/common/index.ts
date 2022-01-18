@@ -18,8 +18,13 @@ export const Container = styled.div`
   max-width: ${props => props.theme.layout.maxWidth};
 `;
 
+export const Section = styled.div`
+  padding: ${props => props.theme.layout.section};
+`;
+
 type LoaderProps = {
   size?: 'lg' | 'sm';
+  light?: boolean;
 };
 
 export const Loader = styled.div<LoaderProps>`
@@ -27,8 +32,9 @@ export const Loader = styled.div<LoaderProps>`
   /* width: 24px; */
   width: ${props => (props.size === 'lg' ? '48px' : '24px')};
   height: ${props => (props.size === 'lg' ? '48px' : '24px')};
-  border: 0.25rem solid rgba(38, 70, 83, 0.2);
-  border-top-color: rgb(38, 70, 83);
+  border: 0.25rem solid
+    ${props => (props.light ? `rgba(38, 70, 83, 0.2)` : `rgba(255,255,255, 0.2)`)};
+  border-top-color: ${props => (props.light ? `rgb(38, 70, 83)` : `rgb(255,255,255)`)};
   animation: spin 1s infinite linear;
 
   @keyframes spin {

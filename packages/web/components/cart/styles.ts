@@ -55,3 +55,12 @@ export const CartRemove = styled.button`
     color: ${props => props.theme.colors.red};
   }
 `;
+
+export const CartShippingInfo = styled.p`
+  text-align: right;
+  color: ${props => props.theme.colors.darkGreen};
+  margin-right: 25px;
+  ${flex('row', 'space-between', 'center')}
+  span {
+  }
+`;

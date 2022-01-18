@@ -34,7 +34,7 @@ const Login: NextPage = () => {
               });
 
               if (data?.login.user.isSeller) {
-                router.push('/seller');
+                router.push('/dashboard');
               } else {
                 router.push('/');
               }
