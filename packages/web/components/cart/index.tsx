@@ -1,8 +1,9 @@
-import React from 'react';
-import { ButtonLink } from '..';
+import React, { useState } from 'react';
+import { Button, ButtonLink } from '..';
 import { useCart } from '../../context';
 import { calculateCartTotal } from '../../lib/calculateCartTotal';
 import {
+  CartCheckoutText,
   CartColumn,
   CartEmptyMsg,
   CartItem,
@@ -13,6 +14,9 @@ import {
   CartWrapper,
 } from './styles';
 import { FaTimesCircle } from 'react-icons/fa';
+import { CheckoutForm } from '../checkout-form';
+import { StripeProvider } from '../../lib/stripe';
+import Modal from '../modal';
 
 // hello
 type CartProps = {
@@ -20,6 +24,8 @@ type CartProps = {
 };
 
 export const Cart = ({ hide = false }: CartProps) => {
+  const [showModal, setShowModal] = useState(false);
+
   const { cartItems, shipping, removeFromCart } = useCart();
 
   return !hide ? (
@@ -50,10 +56,14 @@ export const Cart = ({ hide = false }: CartProps) => {
             </>
           )}
         </CartItems>
-        <ButtonLink href="/checkout">
-          Checkout - {calculateCartTotal(cartItems, shipping)} €
-        </ButtonLink>
+        <Button fullWidth onClick={() => setShowModal(true)}>
+          <CartCheckoutText>Checkout</CartCheckoutText> {calculateCartTotal(cartItems, shipping)} €
+        </Button>
       </CartWrapper>
+
+      <Modal onClose={() => setShowModal(false)} show={showModal}>
+        <CheckoutForm />
+      </Modal>
     </CartColumn>
   ) : null;
 };

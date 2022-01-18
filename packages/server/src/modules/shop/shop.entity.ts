@@ -1,11 +1,11 @@
+/* eslint-disable import/no-cycle */
 import slugify from 'slugify';
 import { Field, ObjectType } from 'type-graphql';
 import { TypeormLoader } from 'type-graphql-dataloader';
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../core/models/abstract.entity';
-// eslint-disable-next-line import/no-cycle
+import { Order } from '../order/order.entity';
 import { Product } from '../product/product.entity';
-// eslint-disable-next-line import/no-cycle
 import { User } from '../user/user.entity';
 
 @ObjectType()
@@ -44,6 +44,11 @@ export class Shop extends AbstractEntity {
   @ManyToOne(() => User, (user: User) => user.shops)
   @TypeormLoader()
   user: User;
+
+  @Field(() => [Order], { nullable: true })
+  @OneToMany(() => Order, orders => orders.shop, { nullable: true })
+  @TypeormLoader()
+  orders: Order[];
 
   @BeforeInsert()
   @BeforeUpdate()

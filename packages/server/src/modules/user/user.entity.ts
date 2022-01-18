@@ -1,8 +1,9 @@
+/* eslint-disable import/no-cycle */
 import { Field, ObjectType } from 'type-graphql';
 import { TypeormLoader } from 'type-graphql-dataloader';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../core/models/abstract.entity';
-// eslint-disable-next-line import/no-cycle
+import { Order } from '../order/order.entity';
 import { Shop } from '../shop/shop.entity';
 import { Role } from './types/role.enum';
 
@@ -36,4 +37,9 @@ export class User extends AbstractEntity {
   @OneToMany(() => Shop, shops => shops.user, { nullable: true })
   @TypeormLoader()
   shops: Shop[];
+
+  @Field(() => [Order], { nullable: true })
+  @OneToMany(() => Order, orders => orders.user, { nullable: true })
+  @TypeormLoader()
+  orders: Order[];
 }

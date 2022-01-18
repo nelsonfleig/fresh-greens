@@ -63,11 +63,13 @@ export const ButtonLink = styled.a`
 `;
 
 type ButtonProps = {
-  color: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary';
+  fullWidth?: boolean;
 };
 
 export const Button = styled.button<ButtonProps>`
   display: block;
+  width: ${props => (props.fullWidth ? '100%' : 'auto')};
   background: ${props =>
     props.color === 'primary' ? props.theme.colors.lightGreen : props.theme.colors.red};
   padding: 7px 20px;

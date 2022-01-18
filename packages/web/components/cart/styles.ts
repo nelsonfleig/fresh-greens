@@ -64,3 +64,7 @@ export const CartShippingInfo = styled.p`
   span {
   }
 `;
+
+export const CartCheckoutText = styled.span`
+  margin-right: 10px;
+`;
