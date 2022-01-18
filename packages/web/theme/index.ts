@@ -13,6 +13,7 @@ export const theme: DefaultTheme = {
     // Hover
     redHover: '#E76F51',
     redForbidden: '#B5573F',
+    lightGreenHover: '#57993D',
   },
   layout: {
     maxWidth: '1200px',

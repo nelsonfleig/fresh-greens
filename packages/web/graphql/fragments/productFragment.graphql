@@ -1,13 +1,9 @@
 fragment productFragment on Product {
   id
   name
-  description
   price
+  slug
+  description
   imageUrl
-  user {
-    id
-    sellerName
-    sellerNameSlug
-    sellerImageUrl
-  }
+  unit
 }

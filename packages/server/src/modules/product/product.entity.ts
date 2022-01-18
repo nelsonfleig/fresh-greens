@@ -4,7 +4,7 @@ import { TypeormLoader } from 'type-graphql-dataloader';
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '../core/models/abstract.entity';
 // eslint-disable-next-line import/no-cycle
-import { User } from '../user/user.entity';
+import { Shop } from '../shop/shop.entity';
 
 @ObjectType()
 @Entity('products')
@@ -29,10 +29,14 @@ export class Product extends AbstractEntity {
   @Column()
   imageUrl: string;
 
-  @Field(() => User)
-  @ManyToOne(() => User, (user: User) => user.products)
+  @Field()
+  @Column()
+  unit: string;
+
+  @Field(() => Shop)
+  @ManyToOne(() => Shop, shop => shop.products)
   @TypeormLoader()
-  user: User;
+  shop: Shop;
 
   @BeforeInsert()
   @BeforeUpdate()

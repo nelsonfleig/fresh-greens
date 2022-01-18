@@ -8,6 +8,7 @@ export const NavHeader = styled.header`
   background: white;
   position: sticky;
   top: 0;
+  z-index: 10;
   ${flex('row', 'center', 'center')}
 `;
 
@@ -42,21 +43,21 @@ export const NavLink = styled.li`
 
 export const NavLogin = styled.a`
   display: block;
-  background: ${props => props.theme.colors.red};
+  background: ${props => props.theme.colors.lightGreen};
   padding: 7px 20px;
   color: white;
   border-radius: ${props => props.theme.styles.borderRadius};
   box-shadow: ${props => props.theme.styles.boxShadow};
   transition: ${props => props.theme.styles.transition};
   &:hover {
-    background: ${props => props.theme.colors.redHover};
+    background: ${props => props.theme.colors.lightGreenHover};
     cursor: pointer;
   }
 `;
 
 export const NavLogout = styled.button`
   display: block;
-  background: ${props => props.theme.colors.red};
+  background: ${props => props.theme.colors.lightGreen};
   padding: 7px 20px;
   color: white;
   border-radius: ${props => props.theme.styles.borderRadius};
@@ -64,7 +65,7 @@ export const NavLogout = styled.button`
   transition: ${props => props.theme.styles.transition};
   border: none;
   &:hover {
-    background: ${props => props.theme.colors.redHover};
+    background: ${props => props.theme.colors.lightGreenHover};
     cursor: pointer;
   }
 `;

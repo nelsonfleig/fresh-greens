@@ -27,12 +27,17 @@ const Login: NextPage = () => {
           validationSchema={loginSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await login({
+              const { data } = await login({
                 variables: {
                   input: values,
                 },
               });
-              router.push('/protected');
+
+              if (data?.login.user.isSeller) {
+                router.push('/seller');
+              } else {
+                router.push('/');
+              }
             } catch (error) {
               if (error instanceof Error) {
                 toast.error(error.message);

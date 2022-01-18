@@ -1,0 +1,15 @@
+fragment shopFragment on Shop {
+  id
+  name
+  slug
+  imageUrl
+  address
+  city
+  zipCode
+  products {
+    ...productFragment
+  }
+  user {
+    id
+  }
+}

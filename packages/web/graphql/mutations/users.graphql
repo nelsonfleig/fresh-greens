@@ -1,6 +1,9 @@
 mutation Login($input: LoginInput!) {
   login(input: $input) {
     accessToken
+    user {
+      ...authUserFragment
+    }
   }
 }
 
@@ -14,14 +17,4 @@ mutation Register($input: RegisterInput!) {
 
 mutation Logout {
   logout
-}
-
-mutation UpgradeToSeller($input: UpgradeToSellerInput!, $sellerImage: Upload!) {
-  upgradeToSeller(input: $input, sellerImage: $sellerImage) {
-    id
-    email
-    roles
-    sellerName
-    sellerImageUrl
-  }
 }

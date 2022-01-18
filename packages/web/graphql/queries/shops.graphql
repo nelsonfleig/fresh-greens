@@ -1,0 +1,17 @@
+query FindOneShop($id: ID!) {
+  shop: findOneShop(id: $id) {
+    ...shopFragment
+  }
+}
+
+query FindShopBySlug($slug: String!) {
+  shop: findShopBySlug(slug: $slug) {
+    ...shopFragment
+  }
+}
+
+query FindMyShops {
+  shops: findMyShops {
+    ...shopFragment
+  }
+}

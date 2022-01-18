@@ -10,4 +10,10 @@ export class ProductInput {
 
   @Field()
   description: string;
+
+  @Field()
+  unit: string;
+
+  @Field()
+  shop: string;
 }

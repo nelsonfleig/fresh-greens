@@ -14,6 +14,7 @@ declare module 'styled-components' {
       redHover: string;
       offWhite: string;
       redForbidden: string;
+      lightGreenHover: string;
     };
     layout: {
       maxWidth: string;

@@ -1,46 +1,49 @@
 import { Form, Formik } from 'formik';
-import { NextPage } from 'next';
-import Link from 'next/link';
+import { GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { CenterInPage, FormikInput } from '../components';
 import { FormikDropzone } from '../components/forms/formik-dropzone';
-import { FormLinks, FormTitle, FormWrapper } from '../components/forms/styles';
+import { FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
-import { MeDocument, useUpgradeToSellerMutation } from '../graphql/__generated__';
-import { upgradeSellerSchema } from '../models/upgrade-seller.form';
+import { MeDocument, Role, useCreateShopMutation } from '../graphql/__generated__';
+import { useUser } from '../hooks/useUser';
+import { createShopSchema } from '../models/create-shop.form';
+import { PageProps } from '../types';
 
 const RegisterSeller: NextPage = () => {
   const router = useRouter();
-  const [upgradeToSeller] = useUpgradeToSellerMutation({
+  const { user } = useUser();
+  const [createShop] = useCreateShopMutation({
     refetchQueries: [MeDocument],
   });
 
   return (
     <CenterInPage>
       <FormWrapper>
-        <FormTitle>Upgrade to Seller</FormTitle>
+        <FormTitle>Create your Shop</FormTitle>
         <Formik
           initialValues={{
-            sellerName: '',
+            name: '',
             address: '',
+            zipCode: '',
             city: '',
-            sellerImage: null,
+            shopImage: null,
           }}
-          validationSchema={upgradeSellerSchema}
-          onSubmit={async ({ sellerImage, ...values }, { setSubmitting }) => {
+          validationSchema={createShopSchema}
+          onSubmit={async ({ shopImage, ...values }, { setSubmitting }) => {
             try {
-              await upgradeToSeller({
+              const shop = await createShop({
                 variables: {
                   input: values,
-                  sellerImage,
+                  shopImage,
                 },
               });
-              router.push('/seller');
-              toast.success('Seller account upgraded!');
+              router.push(`/shops/${shop.data?.createShop.slug}`);
+              toast.success('Your shop has been created!');
             } catch (error) {
               if (error instanceof Error) {
-                toast.error(`Error upgrading account: ${error.message}`);
+                toast.error(`Error creating shop: ${error.message}`);
               }
             } finally {
               setSubmitting(false);
@@ -49,31 +52,32 @@ const RegisterSeller: NextPage = () => {
         >
           {({ isSubmitting, isValid, dirty }) => (
             <Form>
-              <FormikInput name="sellerName" type="text" label="Seller Name" fullWidth />
+              <FormikInput name="name" type="text" label="Shop Name" fullWidth />
               <FormikInput name="address" type="text" label="Address" fullWidth />
+              <FormikInput name="zipCode" type="text" label="Zip Code" fullWidth />
               <FormikInput name="city" type="text" label="City" fullWidth />
-              <FormikDropzone name="sellerImage" label="Seller image" />
+              <FormikDropzone name="shopImage" label="Shop image" />
 
               <SubmitButton
                 loading={isSubmitting}
                 disabled={!dirty || !isValid || isSubmitting}
-                text="Upgrade Account"
+                text="Create Shop"
                 fullWidth
               />
             </Form>
           )}
         </Formik>
-        <FormLinks>
-          <Link href="/login">
-            <a>Already have an account?</a>
-          </Link>
-          <Link href="/register">
-            <a>Reset your password</a>
-          </Link>
-        </FormLinks>
       </FormWrapper>
     </CenterInPage>
   );
 };
 
+export const getStaticProps: GetStaticProps<PageProps, {}> = async context => {
+  return {
+    props: {
+      protected: true,
+      roles: [Role.User],
+    },
+  };
+};
 export default RegisterSeller;

@@ -1,0 +1,5 @@
+mutation CreateShop($input: ShopInput!, $shopImage: Upload!) {
+  createShop(input: $input, shopImage: $shopImage) {
+    ...shopFragment
+  }
+}

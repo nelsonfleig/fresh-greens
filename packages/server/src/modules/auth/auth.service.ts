@@ -13,7 +13,10 @@ import { RegisterInput } from './types/register.input';
 export class AuthService {
   constructor(protected userService: UserService, protected jwtService: JwtService) {}
 
-  async login({ email, password }: LoginInput, res: Response): Promise<{ accessToken: string }> {
+  async login(
+    { email, password }: LoginInput,
+    res: Response
+  ): Promise<{ accessToken: string; user: User }> {
     const errorMsg = 'Invalid email or password';
 
     const user = await this.userService.findOne({ email });
@@ -46,7 +49,7 @@ export class AuthService {
     });
     // TODO: sign a refresh token to send to client
 
-    return { accessToken };
+    return { accessToken, user };
   }
 
   async register(input: RegisterInput): Promise<User> {

@@ -24,6 +24,7 @@ export type Scalars = {
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   accessToken: Scalars['String'];
+  user: User;
 };
 
 export type LoginInput = {
@@ -35,6 +36,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Create Product */
   createProduct: Product;
+  /** Create Shop */
+  createShop: Shop;
   /** Create User */
   createUser: User;
   /** Login user */
@@ -46,15 +49,22 @@ export type Mutation = {
   singleUploadS3: Scalars['String'];
   /** Update Product */
   updateProduct: Product;
+  /** Update Shop */
+  updateShop: Shop;
   /** Update User */
   updateUser: User;
-  upgradeToSeller: User;
 };
 
 
 export type MutationCreateProductArgs = {
   input: ProductInput;
   productImage: Scalars['Upload'];
+};
+
+
+export type MutationCreateShopArgs = {
+  input: ShopInput;
+  shopImage: Scalars['Upload'];
 };
 
 
@@ -84,15 +94,15 @@ export type MutationUpdateProductArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
+export type MutationUpdateShopArgs = {
   id: Scalars['ID'];
-  input: UserInput;
+  input: ShopInput;
 };
 
 
-export type MutationUpgradeToSellerArgs = {
-  input: UpgradeToSellerInput;
-  sellerImage: Scalars['Upload'];
+export type MutationUpdateUserArgs = {
+  id: Scalars['ID'];
+  input: UserInput;
 };
 
 export type Product = {
@@ -103,26 +113,36 @@ export type Product = {
   imageUrl: Scalars['String'];
   name: Scalars['String'];
   price: Scalars['Float'];
+  shop: Shop;
   slug: Scalars['String'];
+  unit: Scalars['String'];
   updatedAt: Scalars['DateTime'];
-  user: User;
 };
 
 export type ProductInput = {
   description: Scalars['String'];
   name: Scalars['String'];
   price: Scalars['Float'];
+  shop: Scalars['String'];
+  unit: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  /** Find logged in user's shops */
+  findMyShops: Array<Shop>;
   /** Find one Product */
   findOneProduct: Product;
+  /** Find one Shop */
+  findOneShop: Shop;
   /** Find one User */
   findOneUser: User;
   /** List all Products */
   findProducts: Array<Product>;
-  findProductsBySellerId: Array<Product>;
+  /** Find a shop by slug */
+  findShopBySlug: Shop;
+  /** List all Shops */
+  findShops: Array<Shop>;
   /** List all Users */
   findUsers: Array<User>;
   hello: Scalars['String'];
@@ -130,6 +150,8 @@ export type Query = {
   me?: Maybe<User>;
   /** Paginate Products */
   paginateProducts: Array<Product>;
+  /** Paginate Shops */
+  paginateShops: Array<Shop>;
   /** Paginate Users */
   paginateUsers: Array<User>;
   protect: Scalars['Boolean'];
@@ -142,17 +164,28 @@ export type QueryFindOneProductArgs = {
 };
 
 
+export type QueryFindOneShopArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryFindOneUserArgs = {
   id: Scalars['ID'];
 };
 
 
-export type QueryFindProductsBySellerIdArgs = {
-  sellerId: Scalars['ID'];
+export type QueryFindShopBySlugArgs = {
+  slug: Scalars['String'];
 };
 
 
 export type QueryPaginateProductsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaginateShopsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -177,57 +210,76 @@ export enum Role {
   User = 'USER'
 }
 
-export type UpgradeToSellerInput = {
+export type Shop = {
+  __typename?: 'Shop';
   address: Scalars['String'];
   city: Scalars['String'];
-  sellerName: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  imageUrl: Scalars['String'];
+  name: Scalars['String'];
+  products?: Maybe<Array<Product>>;
+  slug: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  zipCode: Scalars['String'];
+};
+
+export type ShopInput = {
+  address: Scalars['String'];
+  city: Scalars['String'];
+  name: Scalars['String'];
+  zipCode: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
-  address?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
   isSeller: Scalars['Boolean'];
   lastName: Scalars['String'];
-  products?: Maybe<Array<Product>>;
   roles: Array<Role>;
-  sellerImageUrl?: Maybe<Scalars['String']>;
-  sellerName?: Maybe<Scalars['String']>;
-  sellerNameSlug?: Maybe<Scalars['String']>;
+  shops?: Maybe<Array<Shop>>;
   updatedAt: Scalars['DateTime'];
 };
 
 export type UserInput = {
-  address?: InputMaybe<Scalars['String']>;
-  city?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
-  sellerImageUrl?: InputMaybe<Scalars['String']>;
-  sellerName?: InputMaybe<Scalars['String']>;
 };
 
-export type ProductFragmentFragment = { __typename?: 'Product', id: string, name: string, description: string, price: number, imageUrl: string, user: { __typename?: 'User', id: string, sellerName?: string | null | undefined, sellerNameSlug?: string | null | undefined, sellerImageUrl?: string | null | undefined } };
+export type AuthUserFragmentFragment = { __typename?: 'User', id: string, isSeller: boolean, roles: Array<Role> };
 
-export type AddProductMutationVariables = Exact<{
+export type ProductFragmentFragment = { __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string };
+
+export type ShopFragmentFragment = { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } };
+
+export type CreateProductMutationVariables = Exact<{
   input: ProductInput;
   productImage: Scalars['Upload'];
 }>;
 
 
-export type AddProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, name: string, slug: string, imageUrl: string, user: { __typename?: 'User', id: string } } };
+export type CreateProductMutation = { __typename?: 'Mutation', createProduct: { __typename?: 'Product', id: string, name: string, slug: string, imageUrl: string, shop: { __typename?: 'Shop', id: string, slug: string } } };
+
+export type CreateShopMutationVariables = Exact<{
+  input: ShopInput;
+  shopImage: Scalars['Upload'];
+}>;
+
+
+export type CreateShopMutation = { __typename?: 'Mutation', createShop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', accessToken: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AuthResponse', accessToken: string, user: { __typename?: 'User', id: string, isSeller: boolean, roles: Array<Role> } } };
 
 export type RegisterMutationVariables = Exact<{
   input: RegisterInput;
@@ -241,93 +293,150 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
-export type UpgradeToSellerMutationVariables = Exact<{
-  input: UpgradeToSellerInput;
-  sellerImage: Scalars['Upload'];
+export type FindOneShopQueryVariables = Exact<{
+  id: Scalars['ID'];
 }>;
 
 
-export type UpgradeToSellerMutation = { __typename?: 'Mutation', upgradeToSeller: { __typename?: 'User', id: string, email: string, roles: Array<Role>, sellerName?: string | null | undefined, sellerImageUrl?: string | null | undefined } };
+export type FindOneShopQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
 
-export type FindProductsBySellerIdQueryVariables = Exact<{
-  sellerId: Scalars['ID'];
+export type FindShopBySlugQueryVariables = Exact<{
+  slug: Scalars['String'];
 }>;
 
 
-export type FindProductsBySellerIdQuery = { __typename?: 'Query', findProductsBySellerId: Array<{ __typename?: 'Product', id: string, name: string, description: string, price: number, imageUrl: string, user: { __typename?: 'User', id: string, sellerName?: string | null | undefined, sellerNameSlug?: string | null | undefined, sellerImageUrl?: string | null | undefined } }> };
+export type FindShopBySlugQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
+
+export type FindMyShopsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindMyShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Role>, isSeller: boolean, firstName: string, lastName: string } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Role>, isSeller: boolean, firstName: string, lastName: string, shops?: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> | null | undefined } | null | undefined };
 
-export type FindUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FindUsersQuery = { __typename?: 'Query', findUsers: Array<{ __typename?: 'User', id: string, email: string }> };
-
+export const AuthUserFragmentFragmentDoc = gql`
+    fragment authUserFragment on User {
+  id
+  isSeller
+  roles
+}
+    `;
 export const ProductFragmentFragmentDoc = gql`
     fragment productFragment on Product {
   id
   name
-  description
   price
+  slug
+  description
   imageUrl
-  user {
-    id
-    sellerName
-    sellerNameSlug
-    sellerImageUrl
-  }
+  unit
 }
     `;
-export const AddProductDocument = gql`
-    mutation AddProduct($input: ProductInput!, $productImage: Upload!) {
+export const ShopFragmentFragmentDoc = gql`
+    fragment shopFragment on Shop {
+  id
+  name
+  slug
+  imageUrl
+  address
+  city
+  zipCode
+  products {
+    ...productFragment
+  }
+  user {
+    id
+  }
+}
+    ${ProductFragmentFragmentDoc}`;
+export const CreateProductDocument = gql`
+    mutation CreateProduct($input: ProductInput!, $productImage: Upload!) {
   createProduct(input: $input, productImage: $productImage) {
     id
     name
     slug
     imageUrl
-    user {
+    shop {
       id
+      slug
     }
   }
 }
     `;
-export type AddProductMutationFn = Apollo.MutationFunction<AddProductMutation, AddProductMutationVariables>;
+export type CreateProductMutationFn = Apollo.MutationFunction<CreateProductMutation, CreateProductMutationVariables>;
 
 /**
- * __useAddProductMutation__
+ * __useCreateProductMutation__
  *
- * To run a mutation, you first call `useAddProductMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddProductMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProductMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addProductMutation, { data, loading, error }] = useAddProductMutation({
+ * const [createProductMutation, { data, loading, error }] = useCreateProductMutation({
  *   variables: {
  *      input: // value for 'input'
  *      productImage: // value for 'productImage'
  *   },
  * });
  */
-export function useAddProductMutation(baseOptions?: Apollo.MutationHookOptions<AddProductMutation, AddProductMutationVariables>) {
+export function useCreateProductMutation(baseOptions?: Apollo.MutationHookOptions<CreateProductMutation, CreateProductMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddProductMutation, AddProductMutationVariables>(AddProductDocument, options);
+        return Apollo.useMutation<CreateProductMutation, CreateProductMutationVariables>(CreateProductDocument, options);
       }
-export type AddProductMutationHookResult = ReturnType<typeof useAddProductMutation>;
-export type AddProductMutationResult = Apollo.MutationResult<AddProductMutation>;
-export type AddProductMutationOptions = Apollo.BaseMutationOptions<AddProductMutation, AddProductMutationVariables>;
+export type CreateProductMutationHookResult = ReturnType<typeof useCreateProductMutation>;
+export type CreateProductMutationResult = Apollo.MutationResult<CreateProductMutation>;
+export type CreateProductMutationOptions = Apollo.BaseMutationOptions<CreateProductMutation, CreateProductMutationVariables>;
+export const CreateShopDocument = gql`
+    mutation CreateShop($input: ShopInput!, $shopImage: Upload!) {
+  createShop(input: $input, shopImage: $shopImage) {
+    ...shopFragment
+  }
+}
+    ${ShopFragmentFragmentDoc}`;
+export type CreateShopMutationFn = Apollo.MutationFunction<CreateShopMutation, CreateShopMutationVariables>;
+
+/**
+ * __useCreateShopMutation__
+ *
+ * To run a mutation, you first call `useCreateShopMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateShopMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createShopMutation, { data, loading, error }] = useCreateShopMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      shopImage: // value for 'shopImage'
+ *   },
+ * });
+ */
+export function useCreateShopMutation(baseOptions?: Apollo.MutationHookOptions<CreateShopMutation, CreateShopMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateShopMutation, CreateShopMutationVariables>(CreateShopDocument, options);
+      }
+export type CreateShopMutationHookResult = ReturnType<typeof useCreateShopMutation>;
+export type CreateShopMutationResult = Apollo.MutationResult<CreateShopMutation>;
+export type CreateShopMutationOptions = Apollo.BaseMutationOptions<CreateShopMutation, CreateShopMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
     accessToken
+    user {
+      ...authUserFragment
+    }
   }
 }
-    `;
+    ${AuthUserFragmentFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -419,79 +528,110 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
-export const UpgradeToSellerDocument = gql`
-    mutation UpgradeToSeller($input: UpgradeToSellerInput!, $sellerImage: Upload!) {
-  upgradeToSeller(input: $input, sellerImage: $sellerImage) {
-    id
-    email
-    roles
-    sellerName
-    sellerImageUrl
+export const FindOneShopDocument = gql`
+    query FindOneShop($id: ID!) {
+  shop: findOneShop(id: $id) {
+    ...shopFragment
   }
 }
-    `;
-export type UpgradeToSellerMutationFn = Apollo.MutationFunction<UpgradeToSellerMutation, UpgradeToSellerMutationVariables>;
+    ${ShopFragmentFragmentDoc}`;
 
 /**
- * __useUpgradeToSellerMutation__
+ * __useFindOneShopQuery__
  *
- * To run a mutation, you first call `useUpgradeToSellerMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpgradeToSellerMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [upgradeToSellerMutation, { data, loading, error }] = useUpgradeToSellerMutation({
- *   variables: {
- *      input: // value for 'input'
- *      sellerImage: // value for 'sellerImage'
- *   },
- * });
- */
-export function useUpgradeToSellerMutation(baseOptions?: Apollo.MutationHookOptions<UpgradeToSellerMutation, UpgradeToSellerMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpgradeToSellerMutation, UpgradeToSellerMutationVariables>(UpgradeToSellerDocument, options);
-      }
-export type UpgradeToSellerMutationHookResult = ReturnType<typeof useUpgradeToSellerMutation>;
-export type UpgradeToSellerMutationResult = Apollo.MutationResult<UpgradeToSellerMutation>;
-export type UpgradeToSellerMutationOptions = Apollo.BaseMutationOptions<UpgradeToSellerMutation, UpgradeToSellerMutationVariables>;
-export const FindProductsBySellerIdDocument = gql`
-    query FindProductsBySellerId($sellerId: ID!) {
-  findProductsBySellerId(sellerId: $sellerId) {
-    ...productFragment
-  }
-}
-    ${ProductFragmentFragmentDoc}`;
-
-/**
- * __useFindProductsBySellerIdQuery__
- *
- * To run a query within a React component, call `useFindProductsBySellerIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindProductsBySellerIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useFindOneShopQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneShopQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useFindProductsBySellerIdQuery({
+ * const { data, loading, error } = useFindOneShopQuery({
  *   variables: {
- *      sellerId: // value for 'sellerId'
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useFindProductsBySellerIdQuery(baseOptions: Apollo.QueryHookOptions<FindProductsBySellerIdQuery, FindProductsBySellerIdQueryVariables>) {
+export function useFindOneShopQuery(baseOptions: Apollo.QueryHookOptions<FindOneShopQuery, FindOneShopQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindProductsBySellerIdQuery, FindProductsBySellerIdQueryVariables>(FindProductsBySellerIdDocument, options);
+        return Apollo.useQuery<FindOneShopQuery, FindOneShopQueryVariables>(FindOneShopDocument, options);
       }
-export function useFindProductsBySellerIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindProductsBySellerIdQuery, FindProductsBySellerIdQueryVariables>) {
+export function useFindOneShopLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneShopQuery, FindOneShopQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindProductsBySellerIdQuery, FindProductsBySellerIdQueryVariables>(FindProductsBySellerIdDocument, options);
+          return Apollo.useLazyQuery<FindOneShopQuery, FindOneShopQueryVariables>(FindOneShopDocument, options);
         }
-export type FindProductsBySellerIdQueryHookResult = ReturnType<typeof useFindProductsBySellerIdQuery>;
-export type FindProductsBySellerIdLazyQueryHookResult = ReturnType<typeof useFindProductsBySellerIdLazyQuery>;
-export type FindProductsBySellerIdQueryResult = Apollo.QueryResult<FindProductsBySellerIdQuery, FindProductsBySellerIdQueryVariables>;
+export type FindOneShopQueryHookResult = ReturnType<typeof useFindOneShopQuery>;
+export type FindOneShopLazyQueryHookResult = ReturnType<typeof useFindOneShopLazyQuery>;
+export type FindOneShopQueryResult = Apollo.QueryResult<FindOneShopQuery, FindOneShopQueryVariables>;
+export const FindShopBySlugDocument = gql`
+    query FindShopBySlug($slug: String!) {
+  shop: findShopBySlug(slug: $slug) {
+    ...shopFragment
+  }
+}
+    ${ShopFragmentFragmentDoc}`;
+
+/**
+ * __useFindShopBySlugQuery__
+ *
+ * To run a query within a React component, call `useFindShopBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindShopBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindShopBySlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useFindShopBySlugQuery(baseOptions: Apollo.QueryHookOptions<FindShopBySlugQuery, FindShopBySlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindShopBySlugQuery, FindShopBySlugQueryVariables>(FindShopBySlugDocument, options);
+      }
+export function useFindShopBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindShopBySlugQuery, FindShopBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindShopBySlugQuery, FindShopBySlugQueryVariables>(FindShopBySlugDocument, options);
+        }
+export type FindShopBySlugQueryHookResult = ReturnType<typeof useFindShopBySlugQuery>;
+export type FindShopBySlugLazyQueryHookResult = ReturnType<typeof useFindShopBySlugLazyQuery>;
+export type FindShopBySlugQueryResult = Apollo.QueryResult<FindShopBySlugQuery, FindShopBySlugQueryVariables>;
+export const FindMyShopsDocument = gql`
+    query FindMyShops {
+  shops: findMyShops {
+    ...shopFragment
+  }
+}
+    ${ShopFragmentFragmentDoc}`;
+
+/**
+ * __useFindMyShopsQuery__
+ *
+ * To run a query within a React component, call `useFindMyShopsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindMyShopsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindMyShopsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindMyShopsQuery(baseOptions?: Apollo.QueryHookOptions<FindMyShopsQuery, FindMyShopsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindMyShopsQuery, FindMyShopsQueryVariables>(FindMyShopsDocument, options);
+      }
+export function useFindMyShopsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindMyShopsQuery, FindMyShopsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindMyShopsQuery, FindMyShopsQueryVariables>(FindMyShopsDocument, options);
+        }
+export type FindMyShopsQueryHookResult = ReturnType<typeof useFindMyShopsQuery>;
+export type FindMyShopsLazyQueryHookResult = ReturnType<typeof useFindMyShopsLazyQuery>;
+export type FindMyShopsQueryResult = Apollo.QueryResult<FindMyShopsQuery, FindMyShopsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -501,9 +641,12 @@ export const MeDocument = gql`
     isSeller
     firstName
     lastName
+    shops {
+      ...shopFragment
+    }
   }
 }
-    `;
+    ${ShopFragmentFragmentDoc}`;
 
 /**
  * __useMeQuery__
@@ -531,38 +674,3 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const FindUsersDocument = gql`
-    query FindUsers {
-  findUsers {
-    id
-    email
-  }
-}
-    `;
-
-/**
- * __useFindUsersQuery__
- *
- * To run a query within a React component, call `useFindUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useFindUsersQuery(baseOptions?: Apollo.QueryHookOptions<FindUsersQuery, FindUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindUsersQuery, FindUsersQueryVariables>(FindUsersDocument, options);
-      }
-export function useFindUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUsersQuery, FindUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindUsersQuery, FindUsersQueryVariables>(FindUsersDocument, options);
-        }
-export type FindUsersQueryHookResult = ReturnType<typeof useFindUsersQuery>;
-export type FindUsersLazyQueryHookResult = ReturnType<typeof useFindUsersLazyQuery>;
-export type FindUsersQueryResult = Apollo.QueryResult<FindUsersQuery, FindUsersQueryVariables>;
