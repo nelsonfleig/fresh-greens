@@ -28,6 +28,8 @@ Full stack solo project developed as part of Codework's Software Engineering boo
   `packages/web/.env.local` and the private key to `packages/server/.env`.
 - Refer to the `.env.*.example` in the server and web packages to see what env variables are needed
   to start the application correctly.
+- The MailService requires a valid SMTP configuration to work and may prevent the server from
+  booting if missing. You can use Mailtrap or Ethereal mail credentials during development.
 
 ## Getting started
 
