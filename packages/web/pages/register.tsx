@@ -43,7 +43,7 @@ const Register: NextPage = () => {
             }
           }}
         >
-          {({ isSubmitting, isValid, errors }) => (
+          {({ isSubmitting, isValid }) => (
             <Form>
               <FormikInput name="firstName" type="text" label="First name" fullWidth />
               <FormikInput name="lastName" type="text" label="Last name" fullWidth />

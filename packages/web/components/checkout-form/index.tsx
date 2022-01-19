@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { FormikInput } from '..';
 import { useCart } from '../../context';
-import { useCreateOrderMutation } from '../../graphql/__generated__';
+import { FindMyOrdersDocument, useCreateOrderMutation } from '../../graphql/__generated__';
 import { useUser } from '../../hooks/useUser';
 import { calculateCartTotal } from '../../lib/calculateCartTotal';
 import { checkoutSchema } from '../../models/checkout.form';
@@ -60,7 +60,9 @@ interface Props {}
 export const CheckoutForm = (props: Props) => {
   const { cartItems, shop, shipping } = useCart();
   const { user } = useUser();
-  const [createOrder] = useCreateOrderMutation();
+  const [createOrder] = useCreateOrderMutation({
+    refetchQueries: [FindMyOrdersDocument],
+  });
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();

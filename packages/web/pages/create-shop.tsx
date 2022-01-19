@@ -6,7 +6,12 @@ import { CenterInPage, FormikInput } from '../components';
 import { FormikDropzone } from '../components/forms/formik-dropzone';
 import { FormTitle, FormWrapper } from '../components/forms/styles';
 import { SubmitButton } from '../components/forms/submit-button';
-import { MeDocument, Role, useCreateShopMutation } from '../graphql/__generated__';
+import {
+  FindShopsDocument,
+  MeDocument,
+  Role,
+  useCreateShopMutation,
+} from '../graphql/__generated__';
 import { useUser } from '../hooks/useUser';
 import { createShopSchema } from '../models/create-shop.form';
 import { PageProps } from '../types';
@@ -15,7 +20,7 @@ const RegisterSeller: NextPage = () => {
   const router = useRouter();
   const { user } = useUser();
   const [createShop] = useCreateShopMutation({
-    refetchQueries: [MeDocument],
+    refetchQueries: [MeDocument, FindShopsDocument],
   });
 
   return (

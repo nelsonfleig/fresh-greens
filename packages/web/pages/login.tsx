@@ -21,8 +21,8 @@ const Login: NextPage = () => {
         <FormTitle>Login</FormTitle>
         <Formik
           initialValues={{
-            email: 'john@doe.com',
-            password: 'johndoe',
+            email: '',
+            password: '',
           }}
           validationSchema={loginSchema}
           onSubmit={async (values, { setSubmitting }) => {

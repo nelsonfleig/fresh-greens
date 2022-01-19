@@ -342,7 +342,6 @@ export type ShopInput = {
   address: Scalars['String'];
   city: Scalars['String'];
   name: Scalars['String'];
-  orderItems: Array<OrderItemInput>;
   zipCode: Scalars['String'];
 };
 

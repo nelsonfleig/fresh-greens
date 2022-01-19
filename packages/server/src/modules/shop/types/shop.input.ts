@@ -1,5 +1,4 @@
 import { Field, InputType } from 'type-graphql';
-import { OrderItemInput } from '../../order-item/types/order-item.input';
 
 @InputType()
 export class ShopInput {
@@ -14,7 +13,4 @@ export class ShopInput {
 
   @Field()
   zipCode?: string;
-
-  @Field(() => [OrderItemInput])
-  orderItems: OrderItemInput[];
 }

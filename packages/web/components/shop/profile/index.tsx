@@ -39,7 +39,7 @@ export const ShopProfile = ({ shop }: Props) => {
             <SellerInfoContent>
               <h2>{shop.name}</h2>
               <p>
-                {shop.address} items in Stock <br />
+                {shop.address} <br />
                 {shop.zipCode} {shop.city}
               </p>
               <span>{shop.products?.length} items in Stock</span>

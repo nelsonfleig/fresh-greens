@@ -19,6 +19,7 @@ export const FormikInput = ({ label, ...props }: FormikInputProps & FieldHookCon
       <FormInputField
         {...field}
         {...props}
+        autoComplete="new-password"
         error={meta.touched && Boolean(meta.error)}
       ></FormInputField>
       <FormikFieldError>{meta.touched && meta.error}</FormikFieldError>
