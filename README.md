@@ -46,6 +46,10 @@ After modifying the graphql schemas in the server or writing new graphql
 queries/mutations/subscriptions in the web client, run `yarn codegen` to sync the schemas and
 generate new frontend code.
 
+Be careful to be in the right package folder when installing dependencies. Although dependencies in
+this monorepo are stored on the top level node_modules, they must be installed in their
+corresponding package.json.
+
 ## Contributing
 
 Use `yarn commit` or `git cz` if you have `commitizen` installed globally to check for linting
