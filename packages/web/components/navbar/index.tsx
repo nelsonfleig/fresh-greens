@@ -39,6 +39,13 @@ export const Navbar = (props: Props) => {
           </NavLogo>
         </Link>
         <NavLinks>
+          {user && (
+            <NavLink>
+              <Link href="/orders">
+                <a>My Orders</a>
+              </Link>
+            </NavLink>
+          )}
           {user && !user?.isSeller && (
             <NavLink>
               <Link href="/create-shop">

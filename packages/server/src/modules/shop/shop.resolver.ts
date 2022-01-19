@@ -1,6 +1,16 @@
 import { ApolloError } from 'apollo-server-express';
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Authorized, Ctx, Mutation, Resolver, Query } from 'type-graphql';
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  Mutation,
+  Resolver,
+  Query,
+  FieldResolver,
+  Float,
+  Root,
+} from 'type-graphql';
 import { Service } from 'typedi';
 import { Context } from '../../ts/types/context.type';
 import { AuthService } from '../auth/auth.service';
@@ -11,6 +21,8 @@ import { UserService } from '../user/user.service';
 import { Shop } from './shop.entity';
 import { ShopService } from './shop.service';
 import { ShopInput } from './types/shop.input';
+import { OrderService } from '../order/order.service';
+import { Order } from '../order/order.entity';
 
 @Resolver(() => Shop)
 @Service()
@@ -19,7 +31,8 @@ export class ShopResolver extends AbstractResolver(Shop, ShopInput) {
     protected shopService: ShopService,
     protected authService: AuthService,
     protected awsUploader: AWSUploaderService,
-    protected userService: UserService
+    protected userService: UserService,
+    protected orderService: OrderService
   ) {
     super(shopService);
   }
@@ -63,5 +76,12 @@ export class ShopResolver extends AbstractResolver(Shop, ShopInput) {
   @Query(() => [Shop], { name: 'findMyShops', description: "Find logged in user's shops" })
   findMyShops(@Ctx() { user }: Context) {
     return this.shopService.find({ user: user!.id });
+  }
+
+  @Authorized(Role.SELLER)
+  @FieldResolver(() => Float)
+  async totalSales(@Root() shop: Shop) {
+    const orders = (await this.orderService.find({ shop: shop.id })) as Order[];
+    return orders.reduce((sum, order) => sum + order.total, 0);
   }
 }

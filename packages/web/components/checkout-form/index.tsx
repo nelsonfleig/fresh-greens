@@ -1,16 +1,18 @@
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import React, { useState } from 'react';
-import { Button, FormikInput } from '..';
-import { Loader } from '..';
-import styled from 'styled-components';
-import { FormWrapper } from '../forms/styles';
-import { checkoutSchema } from '../../models/checkout.form';
-import { Formik, Form } from 'formik';
+import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js';
+import { Form, Formik } from 'formik';
+import { useRouter } from 'next/router';
+import React from 'react';
 import { toast } from 'react-toastify';
-import { SubmitButton } from '../forms/submit-button';
+import styled from 'styled-components';
+import { FormikInput } from '..';
 import { useCart } from '../../context';
+import { useCreateOrderMutation } from '../../graphql/__generated__';
+import { useUser } from '../../hooks/useUser';
 import { calculateCartTotal } from '../../lib/calculateCartTotal';
-import { StripeProvider } from '../../lib/stripe';
+import { checkoutSchema } from '../../models/checkout.form';
+import { FormikStripe } from '../forms/formik-stripe';
+import { FormGroup, FormikFieldError, FormLabel, FormTitle } from '../forms/styles';
+import { SubmitButton } from '../forms/submit-button';
 
 interface Props {}
 
@@ -56,38 +58,69 @@ const CheckoutFormStyles = styled.form`
 interface Props {}
 
 export const CheckoutForm = (props: Props) => {
-  const { cartItems, shipping } = useCart();
+  const { cartItems, shop, shipping } = useCart();
+  const { user } = useUser();
+  const [createOrder] = useCreateOrderMutation();
+  const stripe = useStripe();
+  const elements = useElements();
+  const router = useRouter();
 
   return (
-    <StripeProvider>
+    <>
+      <FormTitle>Ready {user?.firstName}?</FormTitle>
       <Formik
         initialValues={{
           address: '',
           zipCode: '',
           city: '',
+          stripeComplete: false,
         }}
         validationSchema={checkoutSchema}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={async ({ stripeComplete, ...values }, { setSubmitting, setFieldError }) => {
           try {
-            console.log(values);
-            //router.push(`/shops/${shop.data?.createShop.slug}`);
-            toast.success('Your shop has been created!');
+            console.log(stripeComplete);
+
+            if (stripe && elements) {
+              const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: elements.getElement(CardElement)!,
+              });
+              console.log(paymentMethod);
+              if (error) {
+                setFieldError('stripeComplete', error.message);
+                toast.error(`Error charging card: ${error.message}`);
+                return;
+              }
+
+              const res = await createOrder({
+                variables: {
+                  input: {
+                    ...values,
+                    shop,
+                    total: calculateCartTotal(cartItems, shipping),
+                    stripePaymentMethodId: paymentMethod!.id,
+                    orderItems: cartItems.map(({ product, qty }) => ({ product: product.id, qty })),
+                  },
+                },
+              });
+              router.push(`/orders/${res.data?.createOrder.id}`);
+              toast.success('Your order was successful!');
+            }
           } catch (error) {
             if (error instanceof Error) {
-              toast.error(`Error creating shop: ${error.message}`);
+              toast.error(`Error placing order: ${error.message}`);
             }
           } finally {
             setSubmitting(false);
           }
         }}
       >
-        {({ isSubmitting, isValid, dirty, errors }) => (
+        {({ isSubmitting, isValid, dirty }) => (
           <Form>
-            <FormikInput name="firstName" type="text" label="First name" fullWidth />
-            <FormikInput name="lastName" type="text" label="Last name" fullWidth />
             <FormikInput name="address" type="text" label="Address" fullWidth />
             <FormikInput name="zipCode" type="text" label="Zip Code" fullWidth />
             <FormikInput name="city" type="text" label="City" fullWidth />
+            <FormikStripe name="stripeComplete" label="Credit Card" />
 
             <SubmitButton
               loading={isSubmitting}
@@ -98,6 +131,6 @@ export const CheckoutForm = (props: Props) => {
           </Form>
         )}
       </Formik>
-    </StripeProvider>
+    </>
   );
 };

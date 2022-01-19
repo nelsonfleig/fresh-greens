@@ -34,6 +34,10 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Create Order */
+  createOrder: Order;
+  /** Create OrderItem */
+  createOrderItem: OrderItem;
   /** Create Product */
   createProduct: Product;
   /** Create Shop */
@@ -47,12 +51,26 @@ export type Mutation = {
   /** Register user */
   register: User;
   singleUploadS3: Scalars['String'];
+  /** Update Order */
+  updateOrder: Order;
+  /** Update OrderItem */
+  updateOrderItem: OrderItem;
   /** Update Product */
   updateProduct: Product;
   /** Update Shop */
   updateShop: Shop;
   /** Update User */
   updateUser: User;
+};
+
+
+export type MutationCreateOrderArgs = {
+  input: OrderInput;
+};
+
+
+export type MutationCreateOrderItemArgs = {
+  input: OrderItemInput;
 };
 
 
@@ -88,6 +106,18 @@ export type MutationSingleUploadS3Args = {
 };
 
 
+export type MutationUpdateOrderArgs = {
+  id: Scalars['ID'];
+  input: OrderInput;
+};
+
+
+export type MutationUpdateOrderItemArgs = {
+  id: Scalars['ID'];
+  input: OrderItemInput;
+};
+
+
 export type MutationUpdateProductArgs = {
   id: Scalars['ID'];
   input: ProductInput;
@@ -103,6 +133,46 @@ export type MutationUpdateShopArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['ID'];
   input: UserInput;
+};
+
+export type Order = {
+  __typename?: 'Order';
+  address: Scalars['String'];
+  city: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  orderItems: Array<OrderItem>;
+  shop: Shop;
+  stripeChargeId?: Maybe<Scalars['String']>;
+  total: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  zipCode: Scalars['String'];
+};
+
+export type OrderInput = {
+  address: Scalars['String'];
+  city: Scalars['String'];
+  orderItems: Array<OrderItemInput>;
+  shop: Scalars['String'];
+  stripePaymentMethodId: Scalars['String'];
+  total: Scalars['Float'];
+  zipCode: Scalars['String'];
+};
+
+export type OrderItem = {
+  __typename?: 'OrderItem';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  order: Order;
+  product: Product;
+  qty: Scalars['Float'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type OrderItemInput = {
+  product: Scalars['String'];
+  qty: Scalars['Float'];
 };
 
 export type Product = {
@@ -129,14 +199,24 @@ export type ProductInput = {
 
 export type Query = {
   __typename?: 'Query';
+  findMyOrders: Array<Order>;
   /** Find logged in user's shops */
   findMyShops: Array<Shop>;
+  /** Find one Order */
+  findOneOrder: Order;
+  /** Find one OrderItem */
+  findOneOrderItem: OrderItem;
   /** Find one Product */
   findOneProduct: Product;
   /** Find one Shop */
   findOneShop: Shop;
   /** Find one User */
   findOneUser: User;
+  /** List all OrderItems */
+  findOrderItems: Array<OrderItem>;
+  /** List all Orders */
+  findOrders: Array<Order>;
+  findOrdersByShop: Array<Order>;
   /** List all Products */
   findProducts: Array<Product>;
   /** Find a shop by slug */
@@ -148,6 +228,10 @@ export type Query = {
   hello: Scalars['String'];
   /** Get logged in user */
   me?: Maybe<User>;
+  /** Paginate OrderItems */
+  paginateOrderItems: Array<OrderItem>;
+  /** Paginate Orders */
+  paginateOrders: Array<Order>;
   /** Paginate Products */
   paginateProducts: Array<Product>;
   /** Paginate Shops */
@@ -156,6 +240,16 @@ export type Query = {
   paginateUsers: Array<User>;
   protect: Scalars['Boolean'];
   testEmail: Scalars['Boolean'];
+};
+
+
+export type QueryFindOneOrderArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryFindOneOrderItemArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -174,8 +268,25 @@ export type QueryFindOneUserArgs = {
 };
 
 
+export type QueryFindOrdersByShopArgs = {
+  shopId: Scalars['String'];
+};
+
+
 export type QueryFindShopBySlugArgs = {
   slug: Scalars['String'];
+};
+
+
+export type QueryPaginateOrderItemsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPaginateOrdersArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -218,8 +329,10 @@ export type Shop = {
   id: Scalars['ID'];
   imageUrl: Scalars['String'];
   name: Scalars['String'];
+  orders?: Maybe<Array<Order>>;
   products?: Maybe<Array<Product>>;
   slug: Scalars['String'];
+  totalSales: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   user: User;
   zipCode: Scalars['String'];
@@ -229,6 +342,7 @@ export type ShopInput = {
   address: Scalars['String'];
   city: Scalars['String'];
   name: Scalars['String'];
+  orderItems: Array<OrderItemInput>;
   zipCode: Scalars['String'];
 };
 
@@ -240,6 +354,7 @@ export type User = {
   id: Scalars['ID'];
   isSeller: Scalars['Boolean'];
   lastName: Scalars['String'];
+  orders?: Maybe<Array<Order>>;
   roles: Array<Role>;
   shops?: Maybe<Array<Shop>>;
   updatedAt: Scalars['DateTime'];
@@ -254,9 +369,18 @@ export type UserInput = {
 
 export type AuthUserFragmentFragment = { __typename?: 'User', id: string, isSeller: boolean, roles: Array<Role> };
 
-export type ProductFragmentFragment = { __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string };
+export type OrderFragmentFragment = { __typename?: 'Order', id: string, total: number, address: string, zipCode: string, city: string, createdAt: any, user: { __typename?: 'User', id: string, firstName: string, lastName: string }, shop: { __typename?: 'Shop', id: string, name: string, imageUrl: string }, orderItems: Array<{ __typename?: 'OrderItem', qty: number, id: string, product: { __typename?: 'Product', id: string, name: string, price: number } }> };
 
-export type ShopFragmentFragment = { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } };
+export type ProductFragmentFragment = { __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } };
+
+export type ShopFragmentFragment = { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } };
+
+export type CreateOrderMutationVariables = Exact<{
+  input: OrderInput;
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', createOrder: { __typename?: 'Order', id: string, total: number, address: string, zipCode: string, city: string, orderItems: Array<{ __typename?: 'OrderItem', qty: number, product: { __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } } }>, shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } }, user: { __typename?: 'User', id: string } } };
 
 export type CreateProductMutationVariables = Exact<{
   input: ProductInput;
@@ -272,7 +396,7 @@ export type CreateShopMutationVariables = Exact<{
 }>;
 
 
-export type CreateShopMutation = { __typename?: 'Mutation', createShop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
+export type CreateShopMutation = { __typename?: 'Mutation', createShop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
@@ -293,40 +417,81 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
+export type FindOneOrderQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type FindOneOrderQuery = { __typename?: 'Query', order: { __typename?: 'Order', id: string, total: number, address: string, zipCode: string, city: string, createdAt: any, user: { __typename?: 'User', id: string, firstName: string, lastName: string }, shop: { __typename?: 'Shop', id: string, name: string, imageUrl: string }, orderItems: Array<{ __typename?: 'OrderItem', qty: number, id: string, product: { __typename?: 'Product', id: string, name: string, price: number } }> } };
+
+export type FindMyOrdersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FindMyOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'Order', id: string, total: number, address: string, zipCode: string, city: string, createdAt: any, user: { __typename?: 'User', id: string, firstName: string, lastName: string }, shop: { __typename?: 'Shop', id: string, name: string, imageUrl: string }, orderItems: Array<{ __typename?: 'OrderItem', qty: number, id: string, product: { __typename?: 'Product', id: string, name: string, price: number } }> }> };
+
 export type FindOneShopQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type FindOneShopQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
+export type FindOneShopQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } } };
 
 export type FindShopBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type FindShopBySlugQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } } };
+export type FindShopBySlugQuery = { __typename?: 'Query', shop: { __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } } };
 
 export type FindMyShopsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindMyShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> };
+export type FindMyShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', totalSales: number, id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } }> };
 
 export type FindShopsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FindShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> };
+export type FindShopsQuery = { __typename?: 'Query', shops: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Role>, isSeller: boolean, firstName: string, lastName: string, shops?: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string }> | null | undefined, user: { __typename?: 'User', id: string } }> | null | undefined } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, email: string, roles: Array<Role>, isSeller: boolean, firstName: string, lastName: string, shops?: Array<{ __typename?: 'Shop', id: string, name: string, slug: string, imageUrl: string, address: string, city: string, zipCode: string, products?: Array<{ __typename?: 'Product', id: string, name: string, price: number, slug: string, description: string, imageUrl: string, unit: string, shop: { __typename?: 'Shop', id: string } }> | null | undefined, user: { __typename?: 'User', id: string } }> | null | undefined } | null | undefined };
 
 export const AuthUserFragmentFragmentDoc = gql`
     fragment authUserFragment on User {
   id
   isSeller
   roles
+}
+    `;
+export const OrderFragmentFragmentDoc = gql`
+    fragment orderFragment on Order {
+  id
+  total
+  address
+  zipCode
+  city
+  createdAt
+  user {
+    id
+    firstName
+    lastName
+  }
+  shop {
+    id
+    name
+    imageUrl
+  }
+  orderItems {
+    qty
+    id
+    product {
+      id
+      name
+      price
+    }
+  }
 }
     `;
 export const ProductFragmentFragmentDoc = gql`
@@ -338,6 +503,9 @@ export const ProductFragmentFragmentDoc = gql`
   description
   imageUrl
   unit
+  shop {
+    id
+  }
 }
     `;
 export const ShopFragmentFragmentDoc = gql`
@@ -357,6 +525,56 @@ export const ShopFragmentFragmentDoc = gql`
   }
 }
     ${ProductFragmentFragmentDoc}`;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($input: OrderInput!) {
+  createOrder(input: $input) {
+    id
+    total
+    address
+    zipCode
+    city
+    orderItems {
+      qty
+      product {
+        ...productFragment
+      }
+    }
+    shop {
+      ...shopFragment
+    }
+    user {
+      id
+    }
+  }
+}
+    ${ProductFragmentFragmentDoc}
+${ShopFragmentFragmentDoc}`;
+export type CreateOrderMutationFn = Apollo.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = Apollo.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = Apollo.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
 export const CreateProductDocument = gql`
     mutation CreateProduct($input: ProductInput!, $productImage: Upload!) {
   createProduct(input: $input, productImage: $productImage) {
@@ -533,6 +751,75 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const FindOneOrderDocument = gql`
+    query FindOneOrder($id: ID!) {
+  order: findOneOrder(id: $id) {
+    ...orderFragment
+  }
+}
+    ${OrderFragmentFragmentDoc}`;
+
+/**
+ * __useFindOneOrderQuery__
+ *
+ * To run a query within a React component, call `useFindOneOrderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneOrderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneOrderQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindOneOrderQuery(baseOptions: Apollo.QueryHookOptions<FindOneOrderQuery, FindOneOrderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneOrderQuery, FindOneOrderQueryVariables>(FindOneOrderDocument, options);
+      }
+export function useFindOneOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneOrderQuery, FindOneOrderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneOrderQuery, FindOneOrderQueryVariables>(FindOneOrderDocument, options);
+        }
+export type FindOneOrderQueryHookResult = ReturnType<typeof useFindOneOrderQuery>;
+export type FindOneOrderLazyQueryHookResult = ReturnType<typeof useFindOneOrderLazyQuery>;
+export type FindOneOrderQueryResult = Apollo.QueryResult<FindOneOrderQuery, FindOneOrderQueryVariables>;
+export const FindMyOrdersDocument = gql`
+    query FindMyOrders {
+  orders: findMyOrders {
+    ...orderFragment
+  }
+}
+    ${OrderFragmentFragmentDoc}`;
+
+/**
+ * __useFindMyOrdersQuery__
+ *
+ * To run a query within a React component, call `useFindMyOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindMyOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindMyOrdersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindMyOrdersQuery(baseOptions?: Apollo.QueryHookOptions<FindMyOrdersQuery, FindMyOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindMyOrdersQuery, FindMyOrdersQueryVariables>(FindMyOrdersDocument, options);
+      }
+export function useFindMyOrdersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindMyOrdersQuery, FindMyOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindMyOrdersQuery, FindMyOrdersQueryVariables>(FindMyOrdersDocument, options);
+        }
+export type FindMyOrdersQueryHookResult = ReturnType<typeof useFindMyOrdersQuery>;
+export type FindMyOrdersLazyQueryHookResult = ReturnType<typeof useFindMyOrdersLazyQuery>;
+export type FindMyOrdersQueryResult = Apollo.QueryResult<FindMyOrdersQuery, FindMyOrdersQueryVariables>;
 export const FindOneShopDocument = gql`
     query FindOneShop($id: ID!) {
   shop: findOneShop(id: $id) {
@@ -607,6 +894,7 @@ export const FindMyShopsDocument = gql`
     query FindMyShops {
   shops: findMyShops {
     ...shopFragment
+    totalSales
   }
 }
     ${ShopFragmentFragmentDoc}`;

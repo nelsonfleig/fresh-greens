@@ -6,7 +6,8 @@ import { cartReducer } from './reducer';
 
 const INITIAL_STATE: ICartState = {
   cartItems: [],
-  shipping: 5, // constant value
+  shop: '',
+  shipping: 5,
   addToCart: () => {},
   removeFromCart: () => {},
   clearCart: () => {},

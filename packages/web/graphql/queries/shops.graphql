@@ -13,6 +13,7 @@ query FindShopBySlug($slug: String!) {
 query FindMyShops {
   shops: findMyShops {
     ...shopFragment
+    totalSales
   }
 }
 

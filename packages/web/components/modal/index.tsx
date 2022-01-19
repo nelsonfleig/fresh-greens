@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { FaTimes } from 'react-icons/fa';
 import {
   StyledModalOverlay,
   StyledModal,
@@ -32,7 +33,7 @@ export const Modal = ({ show, onClose, children, title }: ModalProps) => {
       <StyledModal>
         <StyledModalHeader>
           <a href="#" onClick={handleCloseClick}>
-            x
+            <FaTimes />
           </a>
         </StyledModalHeader>
         {<StyledModalTitle>{title}</StyledModalTitle>}

@@ -23,7 +23,6 @@ export const CartTitle = styled.h3`
 
 export const CartItems = styled.div`
   width: 100%;
-  margin-bottom: 20px;
 `;
 
 export const CartItem = styled.div`
@@ -39,10 +38,10 @@ export const CartItem = styled.div`
 `;
 
 export const CartEmptyMsg = styled.h4`
-  color: ${props => props.theme.colors.darkGreen};
+  color: ${props => props.theme.colors.darkGray};
   margin-top: 20px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 export const CartRemove = styled.button`
@@ -59,7 +58,7 @@ export const CartRemove = styled.button`
 export const CartShippingInfo = styled.p`
   text-align: right;
   color: ${props => props.theme.colors.darkGreen};
-  margin-right: 25px;
+  margin: 10px 25px 20px 0;
   ${flex('row', 'space-between', 'center')}
   span {
   }

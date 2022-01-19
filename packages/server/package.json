@@ -19,6 +19,7 @@
     "@types/nodemailer": "^6.4.4",
     "@types/nodemailer-express-handlebars": "^4.0.2",
     "@types/pluralize": "^0.0.29",
+    "@types/stripe": "^8.0.417",
     "slugify": "^1.6.5",
     "ts-node-dev": "^1.1.8",
     "typescript-transform-paths": "^3.3.1"
@@ -47,6 +48,7 @@
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "slugify": "^1.6.5",
+    "stripe": "^8.197.0",
     "type-graphql": "^1.1.1",
     "type-graphql-dataloader": "^0.5.0",
     "typedi": "^0.10.0",

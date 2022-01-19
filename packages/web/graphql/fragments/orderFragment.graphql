@@ -1,0 +1,27 @@
+fragment orderFragment on Order {
+  id
+  total
+  address
+  zipCode
+  city
+  createdAt
+  user {
+    id
+    firstName
+    lastName
+  }
+  shop {
+    id
+    name
+    imageUrl
+  }
+  orderItems {
+    qty
+    id
+    product {
+      id
+      name
+      price
+    }
+  }
+}

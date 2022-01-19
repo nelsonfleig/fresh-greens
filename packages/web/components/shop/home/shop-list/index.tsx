@@ -43,7 +43,7 @@ export const ShopsList = ({ shops, title, action }: Props) => {
 
       <ShopsGrid>
         {shops?.map(shop => (
-          <ShopItem shop={shop} />
+          <ShopItem key={shop.id} shop={shop} />
         ))}
       </ShopsGrid>
     </ShopsWrapper>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CenteredLoader, Container } from '../..';
+import { useCart } from '../../../context';
 import { FindShopBySlugQuery } from '../../../graphql/__generated__';
 import { useUser } from '../../../hooks/useUser';
 import { Cart } from '../../cart';
@@ -19,8 +20,12 @@ interface Props {
 
 export const ShopProfile = ({ shop }: Props) => {
   const { user } = useUser();
-
+  const { clearCart } = useCart();
   const isOwner = () => shop?.user.id === user?.id;
+
+  useEffect(() => {
+    clearCart();
+  }, []);
 
   if (!shop) return <CenteredLoader />;
   return (

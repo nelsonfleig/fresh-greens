@@ -1,0 +1,11 @@
+query FindOneOrder($id: ID!) {
+  order: findOneOrder(id: $id) {
+    ...orderFragment
+  }
+}
+
+query FindMyOrders {
+  orders: findMyOrders {
+    ...orderFragment
+  }
+}

@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-express';
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -15,19 +16,18 @@ export class OrderService extends AbstractService {
     super(orderRepo);
   }
 
-  async create(data: OrderInput & { user: number }): Promise<Order> {
+  async create(data: OrderInput & { user: number; stripeChargeId: string }): Promise<Order> {
     const createdOrder = await super.create(data);
     // Create order items
     try {
-      const res = await Promise.all(
+      await Promise.all(
         data.orderItems?.map(orderItem =>
           this.orderItemService.create({ ...orderItem, order: createdOrder.id })
         )
       );
-      console.log(res);
+      return createdOrder;
     } catch (error) {
-      console.log(error);
+      throw new ApolloError(error.message);
     }
-    return createdOrder;
   }
 }

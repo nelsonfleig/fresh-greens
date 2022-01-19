@@ -4,19 +4,22 @@ import { OrderItemInput } from '../../order-item/types/order-item.input';
 @InputType()
 export class OrderInput {
   @Field()
-  address?: string;
+  address: string;
 
   @Field()
-  city?: string;
+  city: string;
 
   @Field()
-  zipCode?: string;
+  zipCode: string;
 
   @Field()
-  total?: number;
+  total: number;
 
   @Field()
   shop: string;
+
+  @Field()
+  stripePaymentMethodId: string;
 
   @Field(() => [OrderItemInput])
   orderItems: OrderItemInput[];

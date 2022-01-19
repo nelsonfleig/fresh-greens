@@ -20,6 +20,7 @@ export const cartReducer = (state: ICartState, action: IFluxAction): ICartState 
       } else {
         return {
           ...state,
+          shop: action.payload.shop.id,
           cartItems: [...state.cartItems, { product: action.payload, qty: 1 }],
         };
       }
@@ -31,6 +32,7 @@ export const cartReducer = (state: ICartState, action: IFluxAction): ICartState 
     case CLEAR_CART:
       return {
         ...state,
+        shop: '',
         cartItems: [],
       };
     default:

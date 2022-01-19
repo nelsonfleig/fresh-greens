@@ -1,0 +1,21 @@
+mutation CreateOrder($input: OrderInput!) {
+  createOrder(input: $input) {
+    id
+    total
+    address
+    zipCode
+    city
+    orderItems {
+      qty
+      product {
+        ...productFragment
+      }
+    }
+    shop {
+      ...shopFragment
+    }
+    user {
+      id
+    }
+  }
+}

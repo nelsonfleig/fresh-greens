@@ -6,4 +6,7 @@ fragment productFragment on Product {
   description
   imageUrl
   unit
+  shop {
+    id
+  }
 }

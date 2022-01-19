@@ -26,6 +26,10 @@ export class Order extends AbstractEntity {
   @Column()
   total: number;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  stripeChargeId?: string;
+
   @Field(() => User)
   @ManyToOne(() => User, user => user.orders)
   @TypeormLoader()
