@@ -10,3 +10,4 @@ node_modules
 # Misc
 .eslintcache
 yarn-error.log
+.DS_Store

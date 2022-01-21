@@ -4,5 +4,9 @@
 # Env
 .env
 
+# Uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 # Misc
 yarn-error.log

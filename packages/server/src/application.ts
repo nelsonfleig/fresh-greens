@@ -53,6 +53,7 @@ export class Application {
     app.use(express.json());
     app.use(cookieParser());
     app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+    app.use(express.static('public'));
 
     // Healthcheck
     app.get('/api/health-check', (_, res) => res.sendStatus(200));
